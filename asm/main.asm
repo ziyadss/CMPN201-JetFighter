@@ -54,7 +54,7 @@ main proc far
 	          call    AdvanceBullets
 
 	          call    DrawScore
-	          call    DrawJets
+	          call    Draw_Jet      	;Sandy's draw	-Ziyad's is DrawJets
 	          call    DrawBullets
 
 	          jmp     CheckTime
