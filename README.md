@@ -13,8 +13,6 @@ Sandy	-	Draw jets in all 4 orientations			-	blind spots		-	colored jets?
 
 Khaled	-	'Player 1' & 2 to NAME & Change score to lives
 
-Ziyad	-	Block bullets on 4 sides & limit fire rate
-
 Salma	-	End name input on enter & check for F1,F2,Esc inputs
 
 Collisions for all 4 orientations, and for both jets
