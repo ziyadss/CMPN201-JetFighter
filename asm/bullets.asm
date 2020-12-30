@@ -18,18 +18,23 @@ FireBullets proc near
 	               jz      jet2fire
 	               jmp     exitfire
 	jet1fire:      
-
+				   cmp	   Jet1Reload,0
+				   jnz     exitfire
 	               mov     bx,Jet1X
 	               add     bx,JetW/2
 	               mov     cx,Jet1Y
 	               mov     dx,Jet1Z
+				   mov     Jet1Reload,ReloadTime
 	               jmp     contfire
    
-	jet2fire:      
+	jet2fire:    
+				   cmp	   Jet2Reload,0
+				   jnz     exitfire  
 	               mov     bx,Jet2X
 	               add     bx,JetW/2
 	               mov     cx,Jet2Y
 	               mov     dx,Jet2Z
+				   mov     Jet2Reload,ReloadTime
 
 	contfire:      
                    sub     di,offset bulletsZ+2
@@ -74,7 +79,6 @@ AdvanceBullets proc near
 	               jnz     vert
 
 	hori:          
-	               sar     ax,1
 	               add     bulletsX[bx],ax
 	               cmp     bulletsX[bx],0
 	               jz      removeBullet
@@ -83,7 +87,8 @@ AdvanceBullets proc near
                    jmp     cont
 
 	vert:          
-	               add     bulletsY[bx],ax
+	               sal	   ax,1
+				   add     bulletsY[bx],ax
 	               cmp     bulletsY[bx],0
 	               jz      removeBullet
                    cmp     bulletsY[bx],Window_Height
@@ -122,5 +127,15 @@ AdvanceBullets proc near
 	               jnz     bullets
 
 
-	               ret
+	               cmp Jet1Reload,0
+				   jng check2nd
+				   dec Jet1Reload
+								   
+	check2nd:
+				   cmp Jet2Reload,0
+				   jng exitAdvance
+				   dec Jet2Reload
+
+	exitAdvance:			   
+				   ret
 AdvanceBullets endp

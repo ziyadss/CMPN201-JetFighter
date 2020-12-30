@@ -1,10 +1,3 @@
-	;Sets video mode to 640*480
-ClearScreen proc near
-	                               mov  ax,12h
-	                               int  10h
-	                               ret
-ClearScreen endp
-
 DrawScore proc near
 
 	                               mov  ah,2
