@@ -8,8 +8,8 @@
 .stack 64
 .data
 
-	Window_Width  dw  140h              	;the width of the window (320 pixels)
-	Window_Height dw  0C8h              	;the height of the window (200 pixels)
+	Window_Width  dw  280h              	;the width of the window (640 pixels)
+	Window_Height dw  1E0h              	;the height of the window (480 pixels)
 	Window_Bounds dw  6                 	;variable used to check collisions early
 	
 	LastTime      db  0                 	;used to check if time has passed
@@ -24,8 +24,8 @@
 	Jet2Y         dw  0Ah               	;Y Position (Line) of Jet
 	Jet2Z         dw  -1                	;-1 up, 1 down, 2 right, -2 left
 
-	JetW          equ 11                	;JetW     DW 15h  	;Jet Width
-	JetH          equ 6                 	;JetH    DW 10h  	;Jet Height
+	JetW          equ 11                	;Jet Width
+	JetH          equ 6                 	;Jet Height
 	JetV          equ 5                 	;Jet Velocity
 
 	bulletPtr     dw  0
