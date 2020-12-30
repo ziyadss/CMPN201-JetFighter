@@ -1,0 +1,1 @@
+@start utilities\DOSBox.exe -c "mount M: '%~dp0''" -c "M:" -c "cd build" -c "..\utilies\masm.exe ..\asm\main.asm;" -c "..\utilies\link.exe main.obj;" -c "main.exe"
