@@ -21,7 +21,7 @@
 	Jet1Y         dw  0Ah               	;Y Position (Line) of Jet
 	Jet1Z         dw  -1                  	;-1 up, 1 down, 2 right, -2 left
 
-	Jet2X         dw  0120h             	;X Position (Column) of Jet (300 pixels)
+	Jet2X         dw  0240h             	;X Position (Column) of Jet (300 pixels)
 	Jet2Y         dw  0Ah               	;Y Position (Line) of Jet
 	Jet2Z         dw  -1                 	;-1 up, 1 down, 2 right, -2 left
 
