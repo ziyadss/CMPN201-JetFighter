@@ -1,6 +1,7 @@
 ;Jet Fighter Game
 ;Authors:
 ;		Khaled Mahmoud Mohamed
+;		Salma Mohamed Shehatta
 ;		Sandy Samir Demian Nashed
 ;		Sarah Osama Osman
 ;		Zeyad Sameh Sobhy
