@@ -11,11 +11,12 @@ Sarah	-	Change JetZ on move & block left and right
 
 Sandy	-	Draw jets in all 4 orientations			-	blind spots		-	colored jets?
 
-Khaled	-	'Player 1' & 2 to NAME & Change score to lives
+Khaled	-	Minor adjustments to names/lives
 
 Salma	-	End name input on enter & check for F1,F2,Esc inputs
 
 Collisions for all 4 orientations, and for both jets
+Delete one of the drawjets and of drawscore/lives
 
 Powersups	(check photos & check python img program)		set time for powerups
 

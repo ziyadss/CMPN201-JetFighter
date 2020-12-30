@@ -243,7 +243,7 @@ DrawJets proc near
 	                               ret
 DrawJets endp
 
-Draw_Jet proc near
+Draw_Jets proc near
 
 	;-------------------Left-------------
 
@@ -314,4 +314,4 @@ Draw_Jet proc near
 	                               CMP  AX, JetW
 	                               JNG  LINE_2
 	                               ret
-Draw_Jet endp
+Draw_Jets endp
