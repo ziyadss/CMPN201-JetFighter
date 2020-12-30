@@ -21,7 +21,7 @@ Powersups	(check photos & check python img program)		set time for powerups
 
 	Shield -> after collision check for shield before live--
 
-	Speed up -> multiply speed by const is powerup is on
+	Speed up -> multiply speed by const if powerup is on
 
 	Dizzy -> check if reverse inside move jets
 
