@@ -11,11 +11,11 @@
 
 	Won           db  0
 
-	Name1         db  "Player1NameZZZZ$"                        	;change to dp 16 dup ($)
+	Name1         db  "Player1NameZZZZ$"                    	;change to dp 16 dup ($)
 	Score1        db  "Health ", 8 dup(219) ,"$"
 	Health1       dw  14                                    	;where 14 = Health + barCount = 6 + 8
 	
-	Name2         db  "Player2NameZZZZ$"                        	;change to dp 16 dup ($)
+	Name2         db  "Player2NameZZZZ$"                    	;change to dp 16 dup ($)
 	Score2        db  "Health ", 8 dup(219) ,"$"
 	Health2       dw  14                                    	;where 14 = Health + barCount = 6 + 8
 	
@@ -61,7 +61,7 @@ main proc far
 
 	CheckTime:
 	          call    FireBullets
-			  call    MoveJets
+	          call    MoveJets
                                    
 	          mov     ah,2ch        	;get system time
 	          int     21h           	;CH = hour, CL = minute, DH = second, DL = millisecond
@@ -76,14 +76,14 @@ main proc far
 	          call    AdvanceBullets
 
 	          call    DisplayNames
-	          call    DrawLives		  	;call    DrawScores
-	          call    Draw_Jets      	;Sandy's draw	-Ziyad's is DrawJets
+	          call    DrawLives     	;call    DrawScores
+	          call    Draw_Jets     	;Sandy's draw	-Ziyad's is DrawJets
 	          call    DrawBullets
 
 	          cmp     Won,0
-	          jz     CheckTime			;If no winner yet, continue game loop
+	          jz      CheckTime     	;If no winner yet, continue game loop
 
-	          call    EndGame			;Else, end the game
+	          call    EndGame       	;Else, end the game
 main endp
 
 	          include util.asm
