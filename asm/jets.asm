@@ -6,8 +6,6 @@ MoveJets proc near
 	                               jz   LR1                           	;if ZF=1 JZ->Jump if Zero to next Jet // if ZF=0 a key is pressed (check which key)
 
 	;check which key is pressed-After Excution (ah=scancode)
-	                               mov  ah,00h
-	                               int  16h
 	;if it's 'W' or 'w' move left jet Up
 	                               cmp  ah, 11h                       	;'w'/'W'
 	                               je   Move_Left_Jet_Up
@@ -26,9 +24,12 @@ MoveJets proc near
 
 	LR1:                           jmp  Check_Right_Jet_Movement
 
-	Move_Left_Jet_Up:              
-	;Move Left Jet upwards
-	                               mov  ax,JetV
+	Move_Left_Jet_Up:            ;Move Left Jet upwards  
+	                               call Empty_Buffer
+								   cmp  Jet1Z,-1  						;check if the Jet's orientation is like the key press(Up)
+								   je	Move_Left_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
+								   mov  Jet1Z,-1 
+			Move_Left_Up:		   mov  ax,JetV
 	                               sub  Jet1Y,ax
 
 	                               mov  ax,Window_Bounds              	;To make sure that the when the left jet moves up it doesn't move past the window
@@ -36,13 +37,17 @@ MoveJets proc near
 	                               jl   Fix_Jet_Left_Top_Position
 	                               jmp  Check_Right_Jet_Movement
 
-	Fix_Jet_Left_Top_Position:     
+		Fix_Jet_Left_Top_Position:     
 	                               mov  ax,Window_Bounds
 	                               mov  Jet1Y,ax
 	                               jmp  Check_Right_Jet_Movement
 
 	Move_Left_Jet_Down:            
-	                               mov  ax,JetV
+	                               call Empty_Buffer
+								   cmp  Jet1Z,1  						;check if the Jet's orientation is like the key press(Down)
+								   je	Move_Left_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
+								   mov  Jet1Z,1 
+			Move_Left_Down:		   mov  ax,JetV
 	                               add  Jet1Y,ax
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -52,26 +57,34 @@ MoveJets proc near
 	                               jg   Fix_Jet_Left_Bottom_Position
 	                               jmp  Check_Right_Jet_Movement
 
-	Fix_Jet_Left_Bottom_Position:  
+		Fix_Jet_Left_Bottom_Position:  
 	                               mov  Jet1Y,ax
 	                               jmp  Check_Right_Jet_Movement
 
 
 	Move_Left_Jet_Left:            
-	                               mov  ax,JetV
+	                               Call Empty_Buffer
+								   cmp  Jet1Z,-2  						;check if the Jet's orientation is like the key press(Left)
+								   je	Move_Left_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
+								   mov  Jet1Z,-2 
+			Move_Left_Left:		   mov  ax,JetV
 	                               sub  Jet1X,ax
 
 	                               mov  ax,Window_Bounds
 	                               cmp  Jet1X,ax
 	                               jl   Fix_Jet_Left_Left_Position
 	                               jmp  Check_Right_Jet_Movement
-	Fix_Jet_Left_Left_Position:    
+		Fix_Jet_Left_Left_Position:    
 	                               mov  jet1X,ax
 	                               jmp  Check_Right_Jet_Movement
 
     
 	Move_Left_Jet_Right:           
-	                               mov  ax,JetV
+	                               Call Empty_Buffer
+								   cmp  Jet1Z,2  						;check if the Jet's orientation is like the key press(Right)
+								   je	Move_Left_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
+								   mov  Jet1Z,2 
+			Move_Left_Right:	   mov  ax,JetV
 	                               add  Jet1X,ax
 
 	                               mov  ax,Window_Width               	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -80,7 +93,7 @@ MoveJets proc near
 	                               cmp  Jet1X,ax
 	                               jg   Fix_Jet_Left_Right_Position
 	                               jmp  Check_Right_Jet_Movement
-	Fix_Jet_Left_Right_Position:   
+		Fix_Jet_Left_Right_Position:   
 	                               mov  Jet1X,ax
 	                               jmp  Check_Right_Jet_Movement
 
@@ -115,7 +128,11 @@ Check_Right_Jet_Movement_Proc proc near
 
 	Move_Right_Jet_Up:             
 
-	                               mov  ax,JetV
+	                               Call Empty_Buffer			;Remove Jet from buffer before moving the jet
+								   cmp  Jet2Z,-1  						;check if the Jet's orientation is like the key press(Up)
+								   je	Move_Right_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
+								   mov  Jet2Z,-1 
+			Move_Right_Up:		   mov  ax,JetV
 	                               sub  Jet2Y,ax
 
 	                               mov  ax,Window_Bounds              	;To make sure that the when the left jet moves up it doesn't move past the window
@@ -123,14 +140,18 @@ Check_Right_Jet_Movement_Proc proc near
 	                               jl   Fix_Jet_Right_Top_Position
 	                               jmp  Exit_Jet_Movement
 
-	Fix_Jet_Right_Top_Position:    
+		Fix_Jet_Right_Top_Position:    
 	                               mov  ax,Window_Bounds
 	                               mov  Jet2Y,ax
 	                               jmp  Exit_Jet_Movement
 
 	Move_Right_Jet_Down:           
 
-	                               mov  ax,JetV
+	                               Call Empty_Buffer
+								   cmp  Jet2Z,1  						;check if the Jet's orientation is like the key press(Down)
+								   je	Move_Right_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
+								   mov  Jet2Z,1 
+			Move_Right_Down: 	   mov  ax,JetV
 	                               add  Jet2Y,ax
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -140,12 +161,16 @@ Check_Right_Jet_Movement_Proc proc near
 	                               jg   Fix_Jeft_Right_Bottom_Position
 	                               jmp  Exit_Jet_Movement
 
-	Fix_Jeft_Right_Bottom_Position:
+		Fix_Jeft_Right_Bottom_Position:
 	                               mov  Jet2Y,ax
 	                               jmp  Exit_Jet_Movement
 
 	Move_Right_Jet_Left:           
-	                               mov  ax,JetV
+	                               Call Empty_Buffer
+								   cmp  Jet2Z,-2  						;check if the Jet's orientation is like the key press(Left)
+								   je	Move_Right_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
+								   mov  Jet2Z,-2 
+			Move_Right_Left:	   mov  ax,JetV
 	                               sub  Jet2X,ax
 
 	                               mov  ax,Window_Bounds
@@ -153,12 +178,16 @@ Check_Right_Jet_Movement_Proc proc near
 	                               cmp  Jet2X,ax
 	                               jl   Fix_Jet_Right_Left_Position
 	                               jmp  Exit_Jet_Movement
-	Fix_Jet_Right_Left_Position:   
+		Fix_Jet_Right_Left_Position:   
 	                               mov  jet2X,ax
 	                               jmp  Exit_Jet_Movement
     
 	Move_Right_Jet_Right:          
-	                               mov  ax,JetV
+	                               Call Empty_Buffer
+								   cmp  Jet2Z,2  						;check if the Jet's orientation is like the key press(Right)
+								   je	Move_Right_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
+								   mov  Jet2Z,2 
+			Move_Right_Right:	   mov  ax,JetV
 	                               add  Jet2X,ax
 
 	                               mov  ax,Window_Width               	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -166,11 +195,12 @@ Check_Right_Jet_Movement_Proc proc near
 	                               cmp  Jet2X,ax
 	                               jg   Fix_Jet_Right_Right_Position
 	                               jmp  Exit_Jet_Movement
-	Fix_Jet_Right_Right_Position:  
+		Fix_Jet_Right_Right_Position:  
 	                               mov  Jet2X,ax
 	                               jmp  Exit_Jet_Movement
 	Exit_Jet_Movement:             
-	                               ret
+	                               
+								   ret
 Check_Right_Jet_Movement_Proc endp
 
 DrawJets proc near
@@ -315,3 +345,9 @@ Draw_Jets proc near
 	                               JNG  LINE_2
 	                               ret
 Draw_Jets endp
+
+Empty_Buffer proc near
+		mov  ah,00h
+		int  16h
+	ret
+Empty_Buffer endp
