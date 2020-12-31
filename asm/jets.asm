@@ -6,6 +6,8 @@ MoveJets proc near
 	                               jz   LR1                           	;if ZF=1 JZ->Jump if Zero to next Jet // if ZF=0 a key is pressed (check which key)
 
 	;check which key is pressed-After Excution (ah=scancode)
+									mov  ah,00h
+									int  16h
 	;if it's 'W' or 'w' move left jet Up
 	                               cmp  ah, 11h                       	;'w'/'W'
 	                               je   Move_Left_Jet_Up
@@ -25,7 +27,6 @@ MoveJets proc near
 	LR1:                           jmp  Check_Right_Jet_Movement
 
 	Move_Left_Jet_Up:            ;Move Left Jet upwards  
-	                               call Empty_Buffer
 								   cmp  Jet1Z,-1  						;check if the Jet's orientation is like the key press(Up)
 								   je	Move_Left_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
 								   mov  Jet1Z,-1 
@@ -43,7 +44,6 @@ MoveJets proc near
 	                               jmp  Check_Right_Jet_Movement
 
 	Move_Left_Jet_Down:            
-	                               call Empty_Buffer
 								   cmp  Jet1Z,1  						;check if the Jet's orientation is like the key press(Down)
 								   je	Move_Left_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
 								   mov  Jet1Z,1 
@@ -63,7 +63,6 @@ MoveJets proc near
 
 
 	Move_Left_Jet_Left:            
-	                               Call Empty_Buffer
 								   cmp  Jet1Z,-2  						;check if the Jet's orientation is like the key press(Left)
 								   je	Move_Left_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
 								   mov  Jet1Z,-2 
@@ -80,7 +79,6 @@ MoveJets proc near
 
     
 	Move_Left_Jet_Right:           
-	                               Call Empty_Buffer
 								   cmp  Jet1Z,2  						;check if the Jet's orientation is like the key press(Right)
 								   je	Move_Left_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
 								   mov  Jet1Z,2 
@@ -122,13 +120,12 @@ Check_Right_Jet_Movement_Proc proc near
 
 	;if it's 'Right arrow' move right jet Right
 	                               cmp  ah, 4Dh                       	;'Right'
-	                               je   Move_Right_Jet_Right
+	                               je   Move_To_Right
 
 	                               jmp  Exit_Jet_Movement
 
 	Move_Right_Jet_Up:             
 
-	                               Call Empty_Buffer			;Remove Jet from buffer before moving the jet
 								   cmp  Jet2Z,-1  						;check if the Jet's orientation is like the key press(Up)
 								   je	Move_Right_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
 								   mov  Jet2Z,-1 
@@ -144,10 +141,11 @@ Check_Right_Jet_Movement_Proc proc near
 	                               mov  ax,Window_Bounds
 	                               mov  Jet2Y,ax
 	                               jmp  Exit_Jet_Movement
+		
+		Move_To_Right: 
+						jmp Move_Right_Jet_Right
 
 	Move_Right_Jet_Down:           
-
-	                               Call Empty_Buffer
 								   cmp  Jet2Z,1  						;check if the Jet's orientation is like the key press(Down)
 								   je	Move_Right_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
 								   mov  Jet2Z,1 
@@ -166,7 +164,6 @@ Check_Right_Jet_Movement_Proc proc near
 	                               jmp  Exit_Jet_Movement
 
 	Move_Right_Jet_Left:           
-	                               Call Empty_Buffer
 								   cmp  Jet2Z,-2  						;check if the Jet's orientation is like the key press(Left)
 								   je	Move_Right_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
 								   mov  Jet2Z,-2 
@@ -183,7 +180,6 @@ Check_Right_Jet_Movement_Proc proc near
 	                               jmp  Exit_Jet_Movement
     
 	Move_Right_Jet_Right:          
-	                               Call Empty_Buffer
 								   cmp  Jet2Z,2  						;check if the Jet's orientation is like the key press(Right)
 								   je	Move_Right_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
 								   mov  Jet2Z,2 
@@ -346,8 +342,3 @@ Draw_Jets proc near
 	                               ret
 Draw_Jets endp
 
-Empty_Buffer proc near
-		mov  ah,00h
-		int  16h
-	ret
-Empty_Buffer endp
