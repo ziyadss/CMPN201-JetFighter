@@ -81,9 +81,9 @@ main proc far
 	          call    DrawBullets
 
 	          cmp     Won,0
-	          jz     CheckTime
+	          jz     CheckTime			;If no winner yet, continue game loop
 
-	          call    EndGame
+	          call    EndGame			;Else, end the game
 main endp
 
 	          include util.asm
