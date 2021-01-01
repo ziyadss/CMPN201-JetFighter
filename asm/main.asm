@@ -43,8 +43,8 @@
 	Jet2Z         dw  -1                                    	;-1 up, 1 down, 2 right, -2 left
 	Jet2Reload    db  0
 
-	JetW          equ 11                                    	;Jet Width
-	JetH          equ 6                                     	;Jet Height
+	JetW          equ 10                                    	;Jet Width
+	JetH          equ 10                                     	;Jet Height
 	JetV          equ 5                                     	;Jet Velocity
 
 	maxBullets    equ 16                                    	;Maximum number of bullets
@@ -77,7 +77,7 @@ main proc far
 
 	          call    DisplayNames
 	          call    DrawLives     	;call    DrawScores
-	          call    Draw_Jets     	;Sandy's draw	-Ziyad's is DrawJets
+	          call    DRAW__JET     	;Sandy's draw	-Ziyad's is DrawJets
 	          call    DrawBullets
 
 	          cmp     Won,0
