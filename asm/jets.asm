@@ -523,7 +523,7 @@ DRAW_DOWN2:
         SUB AX, Jet1X
         CMP AX, DI
         JNG DRAW_DOWN_ORINTATION
-        DEC DX
+        DEC CX
         
      LINE_DOWN:
         MOV AH,0ch
