@@ -30,6 +30,8 @@ Collisions for all 4 orientations, and for both jets					Sarah & Ziyad
 	6	Faster bullets ->													Salma							
 		
 Powerups
+
 	RNG, spawn, timer, etc													Khaled
 	sprites																	Ziyad & Sandy
+	
 Delete one of the drawjets
