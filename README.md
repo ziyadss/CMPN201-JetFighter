@@ -13,8 +13,6 @@ Sandy	-	Draw jets in all 4 orientations			-	blind spots		-	colored jets?
 
 Khaled	-	Minor adjustments to names/lives
 
-Ziyad	-	Comment my code
-
 Salma	-	End name input on enter & check for F1,F2,Esc inputs
 
 Collisions for all 4 orientations, and for both jets

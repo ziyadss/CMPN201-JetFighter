@@ -1,30 +1,30 @@
 FireBullets proc near
 	               mov     ax,@data
                    mov     es,ax
-	               lea     di,bulletsZ		;set ES:DI to bulletsZ location
+	               lea     di,bulletsZ			;set ES:DI to bulletsZ location
 
 	               xor     ax,ax
 	               mov     cx, maxBullets
-	               repne   scasw			;Look for AX (=0) in bulletZ - an empty spot in the bullets array
-	               jnz     exitfire			;if none found, exit the fire function
+	               repne   scasw				;Look for AX (=0) in bulletZ - an empty spot in the bullets array
+	               jnz     exitfire				;if none found, exit the fire function
 
 	               mov     ah,1
 	               int     16h
-	               jz      exitfire			;if no key pressed, exit the fire function
+	               jz      exitfire				;if no key pressed, exit the fire function
                    
                    cmp     ah,46d
-	               jz      jet1fire			;if 'C' pressed, jet 1 fires
+	               jz      jet1fire				;if 'C' pressed, jet 1 fires
 
 	               cmp     ah,50d
-	               jz      jet2fire			;if 'M' pressed, jet 2 fires
-	               jmp     exitfire			;else, a third key was pressed, so exit the fire function
+	               jz      jet2fire				;if 'M' pressed, jet 2 fires
+	               jmp     exitfire				;else, a third key was pressed, so exit the fire function
 	jet1fire:      
-				   cmp	   Jet1Reload,0		;check if jet reload time is 0
-				   jnz     exitfire			;if not, exit the fire function
+				   cmp	   Jet1Reload,0			;check if jet reload time is 0
+				   jnz     exitfire				;if not, exit the fire function
 	               mov     bx,Jet1X
-	               add     bx,JetW/2		;jetX + Width/2 to be used as bulletX, TODO: change if in different orientation
-	               mov     cx,Jet1Y			;jetY to be used as bulletY, TODO: change if in different orientation
-	               mov     dx,Jet1Z			;jet direction to be used as bullet direction
+	               add     bx,JetW/2			;jetX + Width/2 to be used as bulletX, TODO: change if in different orientation
+	               mov     cx,Jet1Y				;jetY to be used as bulletY, TODO: change if in different orientation
+	               mov     dx,Jet1Z				;jet direction to be used as bullet direction
 				   mov     Jet1Reload,ReloadTime	;set its reload time
 	               jmp     contfire
    
@@ -73,31 +73,31 @@ AdvanceBullets proc near
 
 	bullets:       
    
-	               cmp     bulletsZ[bx],0	;if no bullet, check next one
+	               cmp     bulletsZ[bx],0		;if no bullet, check next one
 	               jz      nohit
                    mov     ax,bulletsZ[bx]
 	               test    ax,1
-	               jnz     vert				;if direction is -1 or 1 bullet is vertical
+	               jnz     vert					;if direction is -1 or 1 bullet is vertical
 
-	hori:          							;else it is horizontal
-	               add     bulletsX[bx],ax	;add +1/-1 to its X depending on direction
+	hori:          								;else it is horizontal
+	               add     bulletsX[bx],ax		;add +1/-1 to its X depending on direction
 	               cmp     bulletsX[bx],0
-	               jz      removeBullet		;if hit boundary, remove it
+	               jle      removeBullet		;if hit boundary, remove it
                    cmp     bulletsX[bx],Window_Width
-                   jz      removeBullet		;if hit boundary, remove it
+                   jge      removeBullet		;if hit boundary, remove it
                    jmp     cont
 
 	vert:          
 	               sal	   ax,1
-				   add     bulletsY[bx],ax	;add +1/-1 to its X depending on direction
+				   add     bulletsY[bx],ax		;add +1/-1 to its X depending on direction
 	               cmp     bulletsY[bx],0
-	               jz      removeBullet	;if hit boundary, remove it
+	               jle      removeBullet		;if hit boundary, remove it
                    cmp     bulletsY[bx],Window_Height
-                   jz      removeBullet	;if hit boundary, remove it
+                   jge      removeBullet		;if hit boundary, remove it
                    jmp     cont
 
 
-	cont:          jmp nohit ;no collision check, TODO: re-do with new jet drawing and orientations
+	cont:          jmp nohit 					;no collision check, TODO: re-do with new jet drawing and orientations
 	               mov     cx,bulletsY[bx]
 	               sub     cx,Jet1Y
 	               cmp     cx,JetH-1
@@ -120,22 +120,22 @@ AdvanceBullets proc near
 	               inc     Score2 +10
    
     removeBullet: 
-                   mov     bulletsZ[bx],0	;set its direction to 0, prevents it from being drawn and allows overwrite
+                   mov     bulletsZ[bx],0		;set its direction to 0, prevents it from being drawn and allows overwrite
 
 	nohit:         
 	               add     bx,2
 	               cmp     bx,maxBullets*2
-	               jnz     bullets		;if haven't checked all bullets, check next one
+	               jnz     bullets				;if haven't checked all bullets, check next one
 
 
 	               cmp Jet1Reload,0
 				   jng check2nd
-				   dec Jet1Reload		;if jet1 is reloading, dec its timer
+				   dec Jet1Reload				;if jet1 is reloading, dec its timer
 								   
 	check2nd:
 				   cmp Jet2Reload,0
 				   jng exitAdvance
-				   dec Jet2Reload		;if jet2 is reloading, dec its timer
+				   dec Jet2Reload				;if jet2 is reloading, dec its timer
 
 	exitAdvance:			   
 				   ret
