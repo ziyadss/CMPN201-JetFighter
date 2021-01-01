@@ -11,7 +11,7 @@
 
 	Won           db  0
 
-	Name1         db  "Player1NameZZZZ$'                      	;change to dp 16 dup ($)
+	Name1         db  'Player1NameZZZZ$'                      	;change to dp 16 dup ($)
 	Score1        db  'Health ', 8 dup(219) ,'$'
 	Health1       dw  15                                      	;where 15 = Health + barCount = 7 + 8
 	
@@ -29,9 +29,6 @@
 	Window_Bounds dw  6                                       	;variable used to check collisions early
     
 	LastTime      db  0                                       	;used to check if time has passed
-
-	;Score1        db  'Player 1: 0$'							;obsolete since we're using bar??
-	;Score2        db  'Player 2: 0$'
 
 	Jet1X         dw  10h                                     	;X Position (Column) of Jet
 	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
