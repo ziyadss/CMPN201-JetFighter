@@ -342,3 +342,207 @@ Draw_Jets proc near
 	                               ret
 Draw_Jets endp
 
+DRAW__JET PROC near
+
+	XOR SI,SI			;Set SI 0
+
+
+    MOV CX, Jet1X
+    MOV DX, Jet1Y
+    MOV BX, DX
+    MOV DI, JetH
+    
+    CMP Jet1Z,-2
+    JE DRAW_LEFT
+    
+    CMP Jet1Z,2
+    JE DRAW_RIGHT
+
+    CMP Jet1Z,-1
+    JE DRAW_UP
+    
+    CMP Jet1Z,1
+    JE DRAW_DOWN
+
+    RIGHT_CHECK:
+	    MOV CX, Jet2X
+        MOV DX, Jet2Y
+        MOV BX, DX
+        MOV DI, JetH
+
+        CMP Jet2Z,-2
+        JE DRAW_LEFT
+        
+        CMP Jet2Z,2
+        JE DRAW_RIGHT
+
+        CMP Jet2Z,-1
+        JE DRAW_UP
+        
+        CMP Jet2Z,1
+        JE DRAW_DOWN
+    
+;----------------------------------RIGHT-------------------------------------------------
+    DRAW_RIGHT:                     ;DRAW JET DIRECTED TOWARD RIGHT POSITION
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10h
+        INC DX
+        MOV AX, DX
+        SUB AX, Jet1Y
+        CMP AX, DI
+        JNG DRAW_RIGHT
+        MOV DX, BX
+        INC DX
+        MOV BX, DX
+        INC CX
+        MOV AX, DX
+        DEC DI
+        SUB AX, Jet1Y
+        CMP AX, DI
+        JNG DRAW_RIGHT
+        DEC DX
+        
+     LINE_RIGHT:
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10H
+        INC CX 
+        MOV AX, CX
+        SUB AX, Jet1X
+        CMP AX, JetW
+        JNG LINE_RIGHT 
+		INC SI
+		CMP SI,2
+		;JE RIGHT_CHECK
+        RET
+        
+        DRAW_DOWN:     ; Double jump ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        jmp DRAW_DOWN2
+
+        DRAW_UP:        ; Double jump ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        JMP DRAW_UP2
+
+;----------------------------LEFT---------------------------------------
+DRAW_LEFT:
+    ADD CX, JetW           ;CHANGE COORDINATE TO DRAW JETS IN THE SAME AREA IN ALL PRIANTATIONS
+    MOV BP, CX                  ; STORE THE CX WHERE IT STARTS DRAWING
+
+    DRAW_LEFT_ORIANTATION:                  ;DRAW JET DIRACTED TOWARD LEFT
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10h
+        INC DX
+        MOV AX, DX
+        SUB AX, Jet1Y
+        CMP AX, DI
+        JNG DRAW_LEFT_ORIANTATION
+        MOV DX, BX
+        INC DX
+        MOV BX, DX
+        DEC CX
+        MOV AX, DX
+        DEC DI 
+        SUB AX, Jet1Y
+        CMP AX, DI
+        JNG DRAW_LEFT_ORIANTATION
+        DEC DX
+
+     LINE_LEFT:
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10H
+        DEC CX 
+        MOV AX, BP
+        SUB AX, CX
+        CMP AX, JetW
+        JNG LINE_LEFT
+		INC SI
+		CMP SI,2
+		;JE RIGHT_CHECK
+        RET
+;------------------------------UP---------------------------
+DRAW_UP2:
+    ADD DX, JetW           
+    MOV BX, CX 
+    MOV BP, DX              
+
+    DRAW_UP_ORIANTATION:                  
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10h
+        INC CX
+        MOV AX, CX
+        SUB AX, Jet1X
+        CMP AX, DI
+        JNG DRAW_UP_ORIANTATION
+        MOV CX, BX
+        INC CX
+        MOV BX, CX
+        DEC DX
+        MOV AX, CX
+        DEC DI 
+        SUB AX, Jet1X
+        CMP AX, DI
+        JNG DRAW_UP_ORIANTATION
+        DEC CX
+
+     LINE_UP:
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10H
+        DEC DX 
+        MOV AX, BP
+        SUB AX, DX
+        CMP AX, JetW
+        JNG LINE_UP
+		INC SI
+		CMP SI,2
+		;JE RIGHT_CHECK
+        RET
+;----------------------DOWN--------------------------------------------
+DRAW_DOWN2:
+    MOV BX,CX
+
+ DRAW_DOWN_ORINTATION:                     
+
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10h
+        INC CX
+        MOV AX, CX
+        SUB AX, Jet1X
+        CMP AX, DI
+        JNG DRAW_DOWN_ORINTATION
+        MOV CX, BX
+        INC CX
+        MOV BX, CX
+        INC DX
+        MOV AX, CX
+        DEC DI
+        SUB AX, Jet1X
+        CMP AX, DI
+        JNG DRAW_DOWN_ORINTATION
+        DEC DX
+        
+     LINE_DOWN:
+        MOV AH,0ch
+        MOV AL,0fh
+        INT 10H
+        INC DX 
+        MOV AX, DX
+        SUB AX, Jet1Y
+        CMP AX, JetW
+        JNG LINE_DOWN
+
+		INC SI
+		CMP SI,2
+		;JE RIGHT_CHECK
+        RET
+
+	
+
+RET
+DRAW__JET ENDP
+
+
