@@ -1,25 +1,3 @@
-DrawScores proc near ;obselete since we're using bar?
-
-	                               mov  ah,2
-	                               mov  dx,0106h                      	;Move cursor to the first score location
-	                               int  10h
-
-	                               mov  ah, 9
-	                               lea  dx, Score1                    	;Print player1 Score
-	                               int  21h
-
-	                               mov  ah,2
-	                               mov  dx,0116h                      	;Move cursor to the secound score location
-	                               int  10h
-
-	                               mov  ah, 9
-	                               lea  dx, Score2                    	;Print player2 Score
-	                               int  21h
-                   
-	                               ret
-
-DrawScores endp
-
 DisplayNames proc near
 
 	 	mov ah,2
