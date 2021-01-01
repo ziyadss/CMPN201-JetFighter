@@ -15,7 +15,7 @@
 	Score1        db  'Health ', 8 dup(219) ,'$'
 	Health1       dw  15                                      	;where 15 = Health + barCount = 7 + 8
 	
-	Name2         db  'Player2NameZZZZ$'                     	;change to dp 16 dup ($)
+	Name2         db  'Player2NameZZZZ$'                      	;change to dp 16 dup ($)
 	Score2        db  'Health ', 8 dup(219) ,'$'
 	Health2       dw  15                                      	;where 15 = Health + barCount = 7 + 8
 	
@@ -34,15 +34,17 @@
 	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet1Z         dw  -1                                      	;-1 up, 1 down, 2 right, -2 left
 	Jet1Reload    db  0
+	Jet1State     db  0                                      	;
 
 	Jet2X         dw  0220h                                   	;X Position (Column) of Jet (300 pixels)
 	Jet2Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet2Z         dw  -1                                      	;-1 up, 1 down, 2 right, -2 left
 	Jet2Reload    db  0
+	Jet2State     db  0                                       	;
 
-	JetW          equ 10                                    	;Jet Width
-	JetH          equ 10                                     	;Jet Height
-	JetV          equ 5                                     	;Jet Velocity
+	JetW          equ 10                                      	;Jet Width
+	JetH          equ 10                                      	;Jet Height
+	JetV          equ 4                                      	;Jet Velocity
 
 	maxBullets    equ 16                                      	;Maximum number of bullets
 	bulletsX      dw  maxBullets dup (?)                      	;Array of X locations of the bullets

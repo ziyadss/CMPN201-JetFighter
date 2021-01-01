@@ -7,29 +7,29 @@ A remake of the 2 player 1975 Atari game.
 Run the batch file 'Jet Fighter.bat'.
 
 ### TO DO
-Sarah	-	Change JetZ on move & block left and right
+Second jet draw, blind spot, Colored jets?								Sarah & Sandy
 
-Sandy	-	Draw jets in all 4 orientations			-	blind spots		-	colored jets?
+Minor adjustments to names/lives										Khaled
 
-Khaled	-	Minor adjustments to names/lives
+Name input & check for F1,F2,Esc inputs									Salma
 
-Salma	-	End name input on enter & check for F1,F2,Esc inputs
+Fix fire bullets with new coordinates									Ziyad
 
-Collisions for all 4 orientations, and for both jets
-Delete one of the drawjets and of drawscore/lives
+Collisions for all 4 orientations, and for both jets					Sarah & Ziyad
 
-Powersups	(check photos & check python img program)		set time for powerups
+	1	Shield -> after collision check for shield before live--			^^^^
 
-	Shield -> after collision check for shield before live--
+	2	Speed up jet -> multiply speed by const if powerup is on			Sandy
 
-	Speed up -> multiply speed by const if powerup is on
+	3	Dizzy -> check if reverse inside move jets							Sarah
 
-	Dizzy -> check if reverse inside move jets
+	4	Double bullet ->													Ziyad
 
-	Double bullet ->
+	5	Freeze ->															Khaled
 
-	Freeze ->
-
-	Faster jet ->
-			
-	Faster bullets ->
+	6	Faster bullets ->													Salma							
+		
+Powerups
+	RNG, spawn, timer, etc													Khaled
+	sprites																	Ziyad & Sandy
+Delete one of the drawjets

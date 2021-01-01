@@ -80,20 +80,22 @@ AdvanceBullets proc near
 	               jnz     vert					;if direction is -1 or 1 bullet is vertical
 
 	hori:          								;else it is horizontal
-	               add     bulletsX[bx],ax		;add +1/-1 to its X depending on direction
+	               sal     ax,1
+				   add     bulletsX[bx],ax		;add +4/-4 to its X depending on direction
 	               cmp     bulletsX[bx],0
-	               jle      removeBullet		;if hit boundary, remove it
+	               jle     removeBullet		;if hit boundary, remove it
                    cmp     bulletsX[bx],Window_Width
-                   jge      removeBullet		;if hit boundary, remove it
+                   jge     removeBullet		;if hit boundary, remove it
                    jmp     cont
 
 	vert:          
-	               sal	   ax,1
-				   add     bulletsY[bx],ax		;add +1/-1 to its X depending on direction
+	               mov	   cl,2
+				   sal	   ax,cl
+				   add     bulletsY[bx],ax		;add +4/-4 to its X depending on direction
 	               cmp     bulletsY[bx],0
-	               jle      removeBullet		;if hit boundary, remove it
+	               jle     removeBullet		;if hit boundary, remove it
                    cmp     bulletsY[bx],Window_Height
-                   jge      removeBullet		;if hit boundary, remove it
+                   jge     removeBullet		;if hit boundary, remove it
                    jmp     cont
 
 
