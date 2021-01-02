@@ -1,4 +1,4 @@
-MoveJets proc near
+MoveJets proc near ;sandy
 	;--------LEFT Jet Movement---------------
 	;check if any key is pressed(Y-> continue N-> Check other Jet)
 	                               mov  ah,01h
