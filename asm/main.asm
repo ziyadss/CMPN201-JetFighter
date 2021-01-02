@@ -34,17 +34,17 @@
 	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet1Z         dw  -1                                      	;-1 up, 1 down, 2 right, -2 left
 	Jet1Reload    db  0
-	Jet1State     db  4                                      	;4 double bullet
+	Jet1State     db  4                                       	;4 double bullet
 
 	Jet2X         dw  0220h                                   	;X Position (Column) of Jet (300 pixels)
 	Jet2Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet2Z         dw  -1                                      	;-1 up, 1 down, 2 right, -2 left
 	Jet2Reload    db  0
-	Jet2State     db  0                                       	;
+	Jet2State     db  0                                       	;4 double bullet
 
 	JetW          equ 10                                      	;Jet Width
 	JetH          equ 10                                      	;Jet Height
-	JetV          equ 4                                      	;Jet Velocity
+	JetV          equ 4                                       	;Jet Velocity
 
 	maxBullets    equ 16                                      	;Maximum number of bullets
 	bulletsX      dw  maxBullets dup (?)                      	;Array of X locations of the bullets
@@ -54,6 +54,11 @@
 	;it is done using SAR on bulletsZ, should a variable-using implementation be found?
 
 .code
+
+	          include util.asm
+	          include jets.asm
+	          include bullets.asm
+
 main proc far
 	          mov     ax,@data
 	          mov     ds,ax
@@ -69,7 +74,7 @@ main proc far
 	          mov     LastTime,dl   	;update last time
                 
 	
-	          mov     ax,13h
+	          mov     ax,12h
 	          int     10h           	;Sets video mode to 640*480 / Clear screen
                                    
 	          call    AdvanceBullets
@@ -84,9 +89,4 @@ main proc far
 
 	          call    EndGame       	;Else, end the game
 main endp
-
-	          include util.asm
-	          include jets.asm
-	          include bullets.asm
-
 end main
