@@ -13,8 +13,6 @@ Minor adjustments to names/lives									Khaled
 
 Name input & check for F1,F2,Esc inputs								Salma
 
-Fix fire bullets with new coordinates								Ziyad
-
 Collisions for all 4 orientations, and for both jets				Sarah & Ziyad
 
 	1	Shield -> after collision check for shield before live--	^^^^
@@ -23,7 +21,7 @@ Collisions for all 4 orientations, and for both jets				Sarah & Ziyad
 
 	3	Dizzy -> check if reverse inside move jets					Sarah
 
-	4	Double bullet ->											Ziyad
+	4	TODO: Refactor and comment double bullet code				Ziyad
 
 	5	Freeze ->													Khaled
 

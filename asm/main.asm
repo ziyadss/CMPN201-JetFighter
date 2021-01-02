@@ -34,7 +34,7 @@
 	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet1Z         dw  -1                                      	;-1 up, 1 down, 2 right, -2 left
 	Jet1Reload    db  0
-	Jet1State     db  0                                      	;
+	Jet1State     db  4                                      	;4 double bullet
 
 	Jet2X         dw  0220h                                   	;X Position (Column) of Jet (300 pixels)
 	Jet2Y         dw  30h                                     	;Y Position (Line) of Jet
@@ -69,7 +69,7 @@ main proc far
 	          mov     LastTime,dl   	;update last time
                 
 	
-	          mov     ax,12h
+	          mov     ax,13h
 	          int     10h           	;Sets video mode to 640*480 / Clear screen
                                    
 	          call    AdvanceBullets

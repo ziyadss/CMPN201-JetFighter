@@ -1,4 +1,4 @@
-FireBullets proc near
+FireBullets proc near			;DOUBLE BULLETS
 	               mov     ax,@data
                    mov     es,ax
 	               lea     di,bulletsZ			;set ES:DI to bulletsZ location
@@ -6,12 +6,15 @@ FireBullets proc near
 	               xor     ax,ax
 	               mov     cx, maxBullets
 	               repne   scasw				;Look for AX (=0) in bulletZ - an empty spot in the bullets array
-	               jnz     exitfire				;if none found, exit the fire function
+	               jnz     nofire				;if none found, exit the fire function
 
 	               mov     ah,1
 	               int     16h
-	               jz      exitfire				;if no key pressed, exit the fire function
+	               jz      nofire				;if no key pressed, exit the fire function
                    
+mov     bx,JetW/2
+mov cx,JetH/2
+
                    cmp     ah,46d
 	               jz      jet1fire				;if 'C' pressed, jet 1 fires
 
@@ -21,30 +24,59 @@ FireBullets proc near
 	jet1fire:      
 				   cmp	   Jet1Reload,0			;check if jet reload time is 0
 				   jnz     exitfire				;if not, exit the fire function
-	               mov     bx,Jet1X
-	               add     bx,JetW/2			;jetX + Width/2 to be used as bulletX, TODO: change if in different orientation
-	               mov     cx,Jet1Y				;jetY to be used as bulletY, TODO: change if in different orientation
+	               add     bx,Jet1X				;jetX + Width/2 to be used as bulletX
+	               add     cx,Jet1Y				;jetY + Height/2 to be used as bulletY
 	               mov     dx,Jet1Z				;jet direction to be used as bullet direction
 				   mov     Jet1Reload,ReloadTime	;set its reload time
-	               jmp     contfire
+				   cmp Jet1State,4
+	               jne     contfire
+				   test dx,1
+				   jnz VerticalJetSub
+				   dec cx
+				   jmp cont2ndBullSub
+				   VerticalJetSub: dec bx
+				   cont2ndBullSub:
+				   mov ax,1
+				   jmp contfire
    
 	jet2fire:    
 				   cmp	   Jet2Reload,0
 				   jnz     exitfire  
-	               mov     bx,Jet2X
-	               add     bx,JetW/2
-	               mov     cx,Jet2Y
+	               add     bx,Jet2X				;jetX + Width/2 to be used as bulletX
+	               add     cx,Jet2Y				;jetY + Height/2 to be used as bulletY
 	               mov     dx,Jet2Z
 				   mov     Jet2Reload,ReloadTime
 
+	nofire: 	   jmp exitfire
+	
 	contfire:      
-                   sub     di,offset bulletsZ+2	;set DI to a ptr at first empty spot in array
+                   push di
+				   sub     di,offset bulletsZ+2	;set DI to a ptr at first empty spot in array
 	               mov     bulletsX[di],bx
 	               mov     bulletsY[di],cx
 	               mov     bulletsZ[di],dx		;initialize bullet X,Y,Z
-	               xor     ah,ah
-	               int     16h					;take 'C' or 'M' out of keyboard buffer
+				   cmp ax,1
+				   pop di
+				   jne fired
 
+				   test dx,1
+				   jnz VerticalJetAdd
+
+				   add cx,2
+				   jmp cont2ndBullAdd
+				   VerticalJetAdd: add bx,2
+cont2ndBullAdd:
+				   xor ax,ax
+				   push cx
+	               mov     cx, maxBullets
+	               repne   scasw				;Look for AX (=0) in bulletZ - an empty spot in the bullets array
+	               jnz     fired				;if none found, exit the fire function
+				   pop cx
+				   jmp contfire
+
+	fired:										;take 'C' or 'M' out of keyboard buffer
+				   xor     ah,ah
+	               int     16h
 	exitfire:      
 	               ret
 FireBullets endp
