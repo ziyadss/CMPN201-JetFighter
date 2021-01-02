@@ -171,7 +171,6 @@ Check_Right_Jet_Movement_Proc proc near
 	                               sub  Jet2X,ax
 
 	                               mov  ax,Window_Bounds
-	                               add  ax,JetW
 	                               cmp  Jet2X,ax
 	                               jl   Fix_Jet_Right_Left_Position
 	                               jmp  Exit_Jet_Movement
@@ -188,6 +187,7 @@ Check_Right_Jet_Movement_Proc proc near
 
 	                               mov  ax,Window_Width               	;To make sure that the when the left jet moves Down it doesn't move past the window
 	                               sub  ax,Window_Bounds
+								   sub  ax, JetW
 	                               cmp  Jet2X,ax
 	                               jg   Fix_Jet_Right_Right_Position
 	                               jmp  Exit_Jet_Movement
