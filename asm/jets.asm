@@ -33,13 +33,13 @@ MoveJets proc near ;sandy
 			Move_Left_Up:		   mov  ax,JetV
 	                               sub  Jet1Y,ax
 
-	                               mov  ax,Window_Bounds              	;To make sure that the when the left jet moves up it doesn't move past the window
+	                               mov  ax,Window_Score              	;To make sure that the when the left jet moves up it doesn't move past the window
 	                               cmp  Jet1Y,ax
 	                               jl   Fix_Jet_Left_Top_Position
 	                               jmp  Check_Right_Jet_Movement
 
 		Fix_Jet_Left_Top_Position:     
-	                               mov  ax,Window_Bounds
+	                               mov  ax,Window_Score
 	                               mov  Jet1Y,ax
 	                               jmp  Check_Right_Jet_Movement
 
@@ -132,13 +132,13 @@ Check_Right_Jet_Movement_Proc proc near
 			Move_Right_Up:		   mov  ax,JetV
 	                               sub  Jet2Y,ax
 
-	                               mov  ax,Window_Bounds              	;To make sure that the when the left jet moves up it doesn't move past the window
+	                               mov  ax,Window_Score              	;To make sure that the when the left jet moves up it doesn't move past the window
 	                               cmp  Jet2Y,ax
 	                               jl   Fix_Jet_Right_Top_Position
 	                               jmp  Exit_Jet_Movement
 
 		Fix_Jet_Right_Top_Position:    
-	                               mov  ax,Window_Bounds
+	                               mov  ax,Window_Score
 	                               mov  Jet2Y,ax
 	                               jmp  Exit_Jet_Movement
 		
