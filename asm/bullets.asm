@@ -193,57 +193,66 @@ CheckHit proc near
 	                   mov     di,1
 	                   xor     si,si
 
-					   mov     bp,bx
+					   mov     bp,bx			
 					   
-	                   mov     ax,Jet1X
-	                   mov     cx,Jet1Y
+	                   mov     ax,Jet1X				; mov Jet X-coordinates to AX
+	                   mov     cx,Jet1Y				; mov Jet Y-coordinates to CX
 	                   
 	CheckCollide:      
-	                   
+	                   ;-------(Bullet-PointA)-----------
 					   mov     bx,bp
 	                   mov     dx,bulletsX[bx]
-	                   mov     Vx,dx
+	                   mov     Vx,dx				;Vx=Curret Bullet's X
                  
 	                   mov     dx,bulletsY[bx]
-	                   mov     Vy,dx
+	                   mov     Vy,dx				;Vy=Current Bullet's Y
 					   
-	                   sub     Vx,ax
-	                   sub     Vy,cx
+	                   sub     Vx,ax				;Vx= BulletX-JetX
+	                   sub     Vy,cx				;Vy= BulletY-JetY
+						;-------(PointB-PointA)-----------
+	                   mov     Wx,0					;Wx=0
+	                   mov     Wy,JetH				;Wy=JetH
                  
-	                   mov     Wx,0
-	                   mov     Wy,JetH
-                 
-	                   call    CrossProduct
+	                   call    CrossProduct			;Call First Cross Product
                  
 	                   push    cx
+                 		
+						;-------(Bullet-PointB)-----------
+													;Vx= The Same (BulletX-JetX)
+	                   sub     Vy,JetH				;Vy= BulletY-JetY-JetH
+						;-------(PointC-PointB)-----------
+
+	                   mov     Wx,JetH/2+1			;?Wx= 
+	                   mov     Wy,-JetH/2			;Wy= -JetH/2
                  
-	                   sub     Vy,JetH
-	                   mov     Wx,JetH/2+1
-	                   mov     Wy,-JetH/2
-                 
-	                   call    CrossProduct
+	                   call    CrossProduct			;Call 2nd Cross Product
                  
 	                   pop     ax
                  
 	                   mov     cl,7
-	                   shr     ah,cl
-	                   shr     ch,cl
-	                   cmp     ah,ch
-	                   jne     CollisionCheckDone
-                 
+	                   shr     ah,cl				;shift ah to get sign bit
+	                   shr     ch,cl				;shift ch to get Sign bit
+	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
+	                   jne     CollisionCheckDone	;check is done
+													;If equal (Can be inside the Triange ) need to check the last side 
+
+
 	                   push    ax
-	                   sub     Vx,JetH/2+1
-	                   add     Vy,JetH/2
-	                   neg     Wx
+					   ;-------(Bullet-PointC)-----------
+	                   sub     Vx,JetH/2+1			;?Vx= The Same (BulletX-JetX) -
+	                   add     Vy,JetH/2			;?Vy= BulletY-JetY-JetH/2
+	                   neg     Wx					;Wx= -ve previous Wx
+					   								;Wy= -JetH/2  Same Wy
                  
-	                   call    CrossProduct
+	                   call    CrossProduct			;Call 3rd Cross Product
                  
 	                   pop     ax
                  
 	                   mov     cl,7
-	                   shr     ch,cl
-	                   cmp     ah,ch
-	                   jne     CollisionCheckDone
+	                   shr     ch,cl				;shift ch to get sign bit
+	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
+	                   jne     CollisionCheckDone	;check is done
+													;If equal (Bullet is inside the Triange ) 
                  
 	                   add     si,1
 	                   cmp     di,1
@@ -272,3 +281,4 @@ CheckHit proc near
 	                   je      CheckCollide2
 	                   ret
 CheckHit endp
+
