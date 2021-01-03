@@ -9,7 +9,12 @@
 .stack 64
 .data
 
-	Won           db  0
+	Vx            dw  ?
+	Vy            dw  ?
+	Wx            dw  ?
+	Wy            dw  ?
+
+	Won           dw  0
 
 	Name1         db  'Player1NameZZZZ$'                      	;change to dp 16 dup ($)
 	Score1        db  'Health ', 8 dup(219) ,'$'
@@ -88,5 +93,8 @@ main proc far
 	          jz      CheckTime     	;If no winner yet, continue game loop
 
 	          call    EndGame       	;Else, end the game
+					   
+	          mov     ax,4C00h
+	          int     21h           	;terminates the application
 main endp
 end main

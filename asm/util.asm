@@ -33,7 +33,6 @@ DrawLives proc near
 	             lea     dx, Score1    	;Print player1 Score
 	             int     21h
 
-
 	             mov     bx,Health2
 	             mov     Score2[bx],"$"
         
@@ -64,7 +63,7 @@ EndGame proc near
 
 	             mov     ah,0
 	             int     16h
-
-	;then?
+;then?
+	ret
 
 EndGame endp
