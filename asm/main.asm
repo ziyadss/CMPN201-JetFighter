@@ -79,7 +79,7 @@ main proc far
 	          mov     LastTime,dl   	;update last time
                 
 	
-	          mov     ax,0012h
+	          mov     ax,12h
 	          int     10h           	;Sets video mode to 640*480 / Clear screen
                                    
 	          call    AdvanceBullets
