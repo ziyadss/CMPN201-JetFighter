@@ -27,7 +27,8 @@
 	Window_Width  equ 280h                                    	;the width of the window (640 pixels)
 	Window_Height equ 1E0h                                    	;the height of the window (480 pixels)
 	Window_Bounds dw  6                                       	;variable used to check collisions early
-    
+    Window_Score  dw  50
+
 	LastTime      db  0                                       	;used to check if time has passed
 
 	Jet1X         dw  10h                                     	;X Position (Column) of Jet
@@ -42,8 +43,8 @@
 	Jet2Reload    db  0
 	Jet2State     db  0                                       	;4 double bullet
 
-	JetW          equ 10                                      	;Jet Width
-	JetH          equ 10                                      	;Jet Height
+	JetW          equ 20                                      	;Jet Width
+	JetH          equ 20                                      	;Jet Height
 	JetV          equ 4                                       	;Jet Velocity
 
 	maxBullets    equ 16                                      	;Maximum number of bullets
