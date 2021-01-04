@@ -20,8 +20,11 @@ blind spots
 6	Faster bullets ->													Salma							
 		
 Powerups RNG, spawn, timer, etc											Khaled
+
 Powerups sprites														Ziyad & Sandy
 
 Notes:
+
     Backspace in name entry
+
     RNG?

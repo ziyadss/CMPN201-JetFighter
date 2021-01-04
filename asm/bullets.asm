@@ -243,9 +243,6 @@ PointAtoV proc near
 	                   add     cx,JetW
 	                   jmp     ContPointA
     
-	                   test    Jet1Z[si],1
-	                   jz      ContinueFix
-    
 	ContPointA:        
 	                   mov     Vx,ax
 	                   mov     Vy,cx
