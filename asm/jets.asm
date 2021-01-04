@@ -370,7 +370,7 @@ DRAW__JET PROC near
 		;----------------------------------RIGHT-------------------------------------------------
 			DRAW_RIGHT:                     ;DRAW JET DIRECTED TOWARD RIGHT POSITION
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10h
 				INC DX
 				MOV AX, DX
@@ -390,7 +390,7 @@ DRAW__JET PROC near
 				
 				LINE_RIGHT:
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10H
 				INC CX 
 				MOV AX, CX
@@ -413,7 +413,7 @@ DRAW__JET PROC near
 
 				DRAW_LEFT_ORIANTATION:                  ;DRAW JET DIRACTED TOWARD LEFT
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10h
 				INC DX
 				MOV AX, DX
@@ -433,7 +433,7 @@ DRAW__JET PROC near
 
 			LINE_LEFT:
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10H
 				DEC CX 
 				MOV AX, BP
@@ -450,7 +450,7 @@ DRAW__JET PROC near
 
 				DRAW_UP_ORIANTATION:                  
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10h
 				INC CX
 				MOV AX, CX
@@ -470,7 +470,7 @@ DRAW__JET PROC near
 
 			LINE_UP:
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10H
 				DEC DX 
 				MOV AX, BP
@@ -486,7 +486,7 @@ DRAW__JET PROC near
 			DRAW_DOWN_ORINTATION:                     
 
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10h
 				INC CX
 				MOV AX, CX
@@ -506,7 +506,7 @@ DRAW__JET PROC near
 				
 			LINE_DOWN:
 				MOV AH,0ch
-				MOV AL,0fh
+				MOV AL,Colour1
 				INT 10H
 				INC DX 
 				MOV AX, DX
@@ -548,7 +548,7 @@ DRAW_RIGHT_JET_PROC proc near
 ;----------------------------------RIGHT-------------------------------------------------
     RIGHT_DRAW_RIGHT:                     ;DRAW JET DIRECTED TOWARD RIGHT POSITION
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10h
         INC DX
         MOV AX, DX
@@ -568,7 +568,7 @@ DRAW_RIGHT_JET_PROC proc near
         
      RIGHT_LINE_RIGHT:
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10H
         INC CX 
         MOV AX, CX
@@ -593,7 +593,7 @@ RIGHT_DRAW_LEFT:
 
     RIGHT_DRAW_LEFT_ORIANTATION:                  ;DRAW JET DIRACTED TOWARD LEFT
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10h
         INC DX
         MOV AX, DX
@@ -613,7 +613,7 @@ RIGHT_DRAW_LEFT:
 
      RIGHT_LINE_LEFT:
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10H
         DEC CX 
         MOV AX, BP
@@ -629,7 +629,7 @@ RIGHT_DRAW_UP2:
 
     RIGHT_DRAW_UP_ORIANTATION:                  
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10h
         INC CX
         MOV AX, CX
@@ -649,7 +649,7 @@ RIGHT_DRAW_UP2:
 
      RIGHT_LINE_UP:
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10H
         DEC DX 
         MOV AX, BP
@@ -664,7 +664,7 @@ RIGHT_DRAW_DOWN2:
  RIGHT_DRAW_DOWN_ORINTATION:                     
 
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10h
         INC CX
         MOV AX, CX
@@ -684,7 +684,7 @@ RIGHT_DRAW_DOWN2:
         
      RIGHT_LINE_DOWN:
         MOV AH,0ch
-        MOV AL,0fh
+        MOV AL,Colour2
         INT 10H
         INC DX 
         MOV AX, DX

@@ -1,117 +1,124 @@
-FireBullets proc near                                		;DOUBLE BULLETS
-	                   mov     ax,@data
-	                   mov     es,ax
-	                   lea     di,bulletsZ               	;set ES:DI to bulletsZ location
-
-	                   xor     ax,ax
-	                   mov     cx, maxBullets
-	                   repne   scasw                     	;Look for AX (=0) in bulletZ - an empty spot in the bullets array
-	                   jnz     nofire                    	;if none found, exit the fire function
-
-	                   mov     ah,1
-	                   int     16h
-	                   jz      nofire                    	;if no key pressed, exit the fire function
+FireBullets proc near
+	                   
+	                      mov     ah,1
+	                      int     16h
+	                      jz      nofire                   	;if no key pressed, exit the fire function
                    
-	                   mov     bx,JetW/2
-	                   mov     cx,JetH/2                 	;so bullet would be in center of jet
+	                      xor     si,si
+	                      cmp     ah,46d
+	                      jz      jetfire                  	;if 'C' pressed, jet 1 fires
 
-	                   cmp     ah,46d
-	                   jz      jet1fire                  	;if 'C' pressed, jet 1 fires
+	                      add     si,2
+	                      cmp     ah,50d
+	                      jz      jetfire                  	;if 'M' pressed, jet 2 fires
+	nofire:               jmp     exitfire                 	;else, a third key was pressed, so exit the fire function
 
-	                   cmp     ah,50d
-	                   jz      jet2fire                  	;if 'M' pressed, jet 2 fires
-	                   jmp     exitfire                  	;else, a third key was pressed, so exit the fire function
+	jetfire:              
+	                      cmp     Jet1Reload[si],0         	;check if jet reload time is 0
+	                      jnz     nofire                   	;if not, exit the fire function
+					   
+	                      lea     di,bulletsZ              	;set ES:DI to bulletsZ location
+	                      cmp     si,0
+	                      je      FirstFire
+	SecondFire:           add     di,maxBullets
+	FirstFire:            xor     ax,ax
+	                      mov     cx, maxBullets/2
+	                      repne   scasw                    	;Look for AX (=0) in bulletZ - an empty spot in the bullets array
+	                      jnz     exitfire                 	;if none found, exit the fire function
+	                      sub     di,offset bulletsZ+2     	;set DI to a ptr at first empty spot in array
 
-	jet1fire:          
-	                   cmp     Jet1Reload,0              	;check if jet reload time is 0
-	                   jnz     nofire                    	;if not, exit the fire function
-	                   add     bx,Jet1X                  	;jetX + Width/2 to be used as bulletX
-	                   add     cx,Jet1Y                  	;jetY + Height/2 to be used as bulletY
-	                   mov     dx,Jet1Z                  	;jet direction to be used as bullet direction
-	                   mov     Jet1Reload,ReloadTime     	;set its reload time
+	                      mov     bx, JetW                 	;mov bx,Jet1X
+	                      mov     cx, JetH/2               	;mov cx,Jet1Y
 
-	                   cmp     Jet1State,4               	;check is double bullet is on
-	                   je      DoubleBulletAdjust        	;if yes, go adjust coordinates
-	                   jmp     contfire                  	;if not, go fire the bullet
-   
-	jet2fire:          
-	                   cmp     Jet2Reload,0
-	                   jnz     nofire
-	                   add     bx,Jet2X
-	                   add     cx,Jet2Y
-	                   mov     dx,Jet2Z
-	                   mov     Jet2Reload,ReloadTime
+	                      mov     dx,Jet1Z[si]             	;jet direction to be used as bullet direction
+	                      cmp     Jet1State[si],4
+	                      jnz     OneBullet					;if double bullet not on, jump
+	                      mov     ax,1						;else set AX
+	                      sub     cx,ax						;move first bullet one pixel
 
-	                   cmp     Jet2State,4
-	                   je      DoubleBulletAdjust
-	                   jmp     contfire
-
-	nofire:            jmp     exitfire
-
-	DoubleBulletAdjust:
-	                   mov     ax,1                      	;if yes, set AX to remember to fire a second bullet
-	                   test    dx,1                      	;test orientation, to correctly adjust bullet coordinates
-	                   jnz     VerticalJetSub
-	                   dec     cx                        	;move first bullet up if jet horizontal
-	                   jmp     contfire
-
-	VerticalJetSub:    
-	                   dec     bx                        	;move first bullet left if jet vertical
-	                   jmp     contfire
+	OneBullet:            test    dx,10000000b
+	                      jz      RightDownBullet
 	
-	contfire:          
-	                   push    di
-	                   sub     di,offset bulletsZ+2      	;set DI to a ptr at first empty spot in array
-	                   mov     bulletsX[di],bx
-	                   mov     bulletsY[di],cx
-	                   mov     bulletsZ[di],dx           	;initialize bullet X,Y,Z
-	                
-	                   pop     di
-	                   cmp     ax,1                      	;check if need to fire second bullet
-	                   jne     fired                     	;if not, we're done
+	LeftUpBullet:         
+	                      xor     bx,bx						;if Jet to left or up, remove coordinate offset
+						  
+	RightDownBullet:      test    dx,1
+	                      jz      Reload
 
-	                   test    dx,1                      	;test orientation, to correctly adjust bullet coordinates
-	                   jnz     VerticalJetAdd
+	VertBullet:           
+	                      xchg    bx,cx						;if jet to up or down, exchange offsets
 
-	                   add     cx,2                      	;move second bullet down if jet horizontal
-	                   jmp     cont2ndBullAdd
+	Reload:               
+	                      add     bx,Jet1X[si]
+	                      add     cx,Jet1Y[si]
+	                      mov     Jet1Reload[si],ReloadTime	;set its reload time
 
-	VerticalJetAdd:    
-	                   add     bx,2                      	;move second bullet right if jet vertical
+	contfire:             
+	                      mov     bulletsX[di],bx
+	                      mov     bulletsY[di],cx
+	                      mov     bulletsZ[di],dx          	;initialize bullet X,Y,Z
+
+	                      cmp     al,0
+	                      je      fired
+
+	                      test    dx,1
+	                      jnz     Vertical2ndReAdjust
+					   
+	Horizontal2ndReAdjust:
+	                      add     cx,2
+	                      jmp     cont2nd
 	
-	cont2ndBullAdd:    
-	                   xor     ax,ax
-	                   push    cx
-	                   mov     cx, maxBullets
-	                   repne   scasw                     	;Look for AX (=0) in bulletZ - an empty spot in the bullets array
-	                   pop     cx
-	                   jnz     fired                     	;if none found, exit the fire function
-	                   jmp     contfire
+	Vertical2ndReAdjust:  
+	                      add     bx,2
 
-	fired:                                               	;take 'C' or 'M' out of keyboard buffer
-	                   xor     ah,ah
-	                   int     16h
+	cont2nd:              
+	                      push    cx
+	                      lea     di,bulletsZ              	;set ES:DI to bulletsZ location
+	                      cmp     si,0
+	                      je      FirstFire2nd
+	SecondFire2nd:        add     di,maxBullets
+	FirstFire2nd:         xor     ax,ax
+	                      mov     cx, maxBullets/2
+	                      repne   scasw                    	;Look for AX (=0) in bulletZ - an empty spot in the bullets array
+	                      jnz     exitfire                 	;if none found, exit the fire function
+	                      sub     di,offset bulletsZ+2     	;set DI to a ptr at first empty spot in array
+	                      pop     cx
+	                      jmp     contfire
+
+	fired:                                                 	;take 'C' or 'M' out of keyboard buffers
+	                      int     16h
 	
-	exitfire:          
-	                   ret
+	exitfire:             
+	                      ret
 FireBullets endp
 
 DrawBullets proc near
-	                   mov     ax,0c0fh                  	;draw parameters
-	                   xor     bx,bx                     	;bx=0
+	                   mov     ah,0ch                  	;draw parameters
+					   mov 	   al,Colour1
+					   xor     si,si
+
+	StartDraw:		   xor     bx,bx                     	;bx=0
 
 	draw:              
-	                   cmp     bulletsZ[bx],0            	;check if bullet is empty - bulletZ=0 bullet time ended
+	                   cmp     bulletsZ[bx][si],0            	;check if bullet is empty - bulletZ=0 bullet time ended
 	                   jz      nextbull
-	                   mov     cx,bulletsX[bx]           	;order of bullet in the array
-	                   mov     dx,bulletsY[bx]
+	                   mov     cx,bulletsX[bx][si]           	;order of bullet in the array
+	                   mov     dx,bulletsY[bx][si]
 	                   int     10h                       	;draw bullet
 	nextbull:          
 	                   add     bx,2                      	;proceed to next bullet
-	                   cmp     bx,maxBullets*2           	;Max bullet capacity
+	                   cmp     bx,maxBullets      	  	;Max bullet capacity
 	                   jnz     draw
 
-	                   ret
+					   cmp 	   si,maxBullets
+					   je	   DrawDone
+					   
+					   mov     al,Colour2
+					   mov 	   si,maxBullets
+					   jmp     StartDraw
+					   
+	                   DrawDone:
+					   ret
 DrawBullets endp
 
 AdvanceBullets proc near
@@ -146,11 +153,11 @@ AdvanceBullets proc near
 	                   jmp     cont
 
 
-	cont:                                                	;	jmp     nohit                     	;no collision check, TODO: re-do with new jet drawing and orientations
+	cont:
 	                   push    bx
 	                   call    CheckHit
 	                   pop     bx
-	                   cmp     si,0
+	                   cmp     bp,0
 	                   je      nohit
    
 	removeBullet:      
@@ -189,377 +196,149 @@ CrossProduct proc near                               		;result in cx bx
 	                   ret
 CrossProduct endp
 
-CheckHit proc near
-	                   mov     di,1
-	                   xor     si,si
+FixWPerZ proc near
+	                   test    Jet1Z[si],1
+	                   jz      ContinueFix
+    
+	UpOrDown:          
+	                   mov     ax,Wx
+	                   xchg    ax,Wy
+	                   mov     Wx,ax
+	                   neg     Wx
+        
+	ContinueFix:       
+	                   cmp     Jet1Z[si],0
+	                   jg      FixDone
+            
+	                   neg     Wx
+	                   neg     Wy
+	FixDone:           
+	                   ret
+FixWPerZ endp
 
-					   mov     bp,bx			
+PointAtoV proc near
+    
+	                   mov     ax,Jet1X[si]
+	                   mov     cx,Jet1Y[si]
+	
+	                   cmp     Jet1Z[si],2
+	                   je      ContPointA
+	
+	                   cmp     Jet1Z[si],1
+	                   je      PointADown
+	
+	                   cmp     Jet1Z[si],-1
+	                   je      PointAUp
+		
+	PointALeft:        
+	                   add     ax,JetW
+	                   add     cx,JetH
+	                   jmp     ContPointA
+	
+	PointADown:        
+	                   add     ax,JetH
+	                   jmp     ContPointA
+	
+	PointAUp:          
+	                   add     cx,JetW
+	                   jmp     ContPointA
+    
+	                   test    Jet1Z[si],1
+	                   jz      ContinueFix
+    
+	ContPointA:        
+	                   mov     Vx,ax
+	                   mov     Vy,cx
+	                   ret
+PointAtoV endp
+
+CheckHit proc near
+	                   xor     bp,bp
+	                   cmp     bx,maxBullets
+	                   jl      SecondJetCheck
+
+	FirstJetCheck:     
+	                   xor     si,si
+	                   jmp     CheckCollide
+
+	SecondJetCheck:    
+	                   mov     si,2
 					   
-	                   mov     ax,Jet1X				; mov Jet X-coordinates to AX
-	                   mov     cx,Jet1Y				; mov Jet Y-coordinates to CX
-	                   
 	CheckCollide:      
-	                   ;-------(Bullet-PointA)-----------
-					   mov     bx,bp
-	                   mov     dx,bulletsX[bx]
-	                   mov     Vx,dx				;Vx=Curret Bullet's X
+	                   call    PointAtoV
+	                   neg     Vx
+	                   neg     Vy
+	                   mov     ax,bulletsX[bx]
+	                   add     Vx,ax
+	                   mov     ax,bulletsY[bx]
+	                   add     Vy,ax
+
+
+	;-------(PointB-PointA)-----------
+	                   mov     Wx,0              	;Wx=0
+	                   mov     Wy,JetH           	;Wy=JetH
                  
-	                   mov     dx,bulletsY[bx]
-	                   mov     Vy,dx				;Vy=Current Bullet's Y
-					   
-	                   sub     Vx,ax				;Vx= BulletX-JetX
-	                   sub     Vy,cx				;Vy= BulletY-JetY
-						;-------(PointB-PointA)-----------
-	                   mov     Wx,0					;Wx=0
-	                   mov     Wy,JetH				;Wy=JetH
-                 
-	                   call    CrossProduct			;Call First Cross Product
+	                   call    FixWPerZ
+	                   call    CrossProduct      	;Call First Cross Product
                  
 	                   push    cx
                  		
-						;-------(Bullet-PointB)-----------
-													;Vx= The Same (BulletX-JetX)
-	                   sub     Vy,JetH				;Vy= BulletY-JetY-JetH
-						;-------(PointC-PointB)-----------
+	;-------(Bullet-PointB)-----------
+	;Vx= The Same (BulletX-JetX)
+	                   mov     ax,Wy
+	                   sub     Vy,ax             	;Vy= BulletY-JetY-JetH
+	                   mov     ax,Wx
+	                   sub     Vx,ax
+	;-------(PointC-PointB)-----------
 
-	                   mov     Wx,JetH/2+1			;?Wx= 
-	                   mov     Wy,-JetH/2			;Wy= -JetH/2
+	                   mov     Wx,JetH/2+1       	;?Wx=
+	                   mov     Wy,-JetH/2        	;Wy= -JetH/2
                  
-	                   call    CrossProduct			;Call 2nd Cross Product
+	                   call    FixWPerZ
+	                   call    CrossProduct      	;Call 2nd Cross Product
                  
 	                   pop     ax
                  
 	                   mov     cl,7
-	                   shr     ah,cl				;shift ah to get sign bit
-	                   shr     ch,cl				;shift ch to get Sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
+	                   shr     ah,cl             	;shift ah to get sign bit
+	                   shr     ch,cl             	;shift ch to get Sign bit
+	                   cmp     ah,ch             	;compare ch & ah if not equal (Diff Signs)->Outside triangle
 	                   jne     CollisionCheckDone	;check is done
-													;If equal (Can be inside the Triange ) need to check the last side 
+	;If equal (Can be inside the Triange ) need to check the last side
 
 
 	                   push    ax
-					   ;-------(Bullet-PointC)-----------
-	                   sub     Vx,JetH/2+1			;?Vx= The Same (BulletX-JetX) -
-	                   add     Vy,JetH/2			;?Vy= BulletY-JetY-JetH/2
-	                   neg     Wx					;Wx= -ve previous Wx
-					   								;Wy= -JetH/2  Same Wy
-                 
-	                   call    CrossProduct			;Call 3rd Cross Product
+	;-------(Bullet-PointC)-----------
+	                   mov     ax,Wx
+	                   sub     Vx,ax             	;?Vx= The Same (BulletX-JetX) -
+	                   mov     ax,Wy
+	                   sub     Vy,ax             	;?Vy= BulletY-JetY-JetH/2
+	                   
+	                   mov     Wx,-JetH/2-1
+	                   mov     Wy,-JetH/2
+
+	                   call    FixWPerZ
+	                   call    CrossProduct      	;Call 3rd Cross Product
                  
 	                   pop     ax
                  
 	                   mov     cl,7
-	                   shr     ch,cl				;shift ch to get sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
+	                   shr     ch,cl             	;shift ch to get sign bit
+	                   cmp     ah,ch             	;compare ch & ah if not equal (Diff Signs)->Outside triangle
 	                   jne     CollisionCheckDone	;check is done
-													;If equal (Bullet is inside the Triange ) 
+	;If equal (Bullet is inside the Triange )
                  
-	                   add     si,1
-	                   cmp     di,1
-	                   jne     HurtTwo
+	                   add     bp,1
+	                   
+	                   dec     Health1[si]
+	                   cmp     Health1[si],7
+	                   jne     CollisionCheckDone
+	                   cmp     si,2
+	                   je      SecondWon
+	                   mov     Won,1
+	                   jmp     CollisionCheckDone
+	SecondWon:         mov     Won,2
 
-	                   dec     Health1
-	                   cmp     Health1,7
-	                   jne     CollisionCheckDone
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone
-					   
-	CheckCollide2:     jmp     CheckCollide
-		
-	HurtTwo:           
-	                   dec     Health2
-	                   cmp     Health2,7
-	                   jne     CollisionCheckDone
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone
-					   
 	CollisionCheckDone:
-	                   inc     di
-	                   cmp     di,2
-	                   mov     ax,Jet2X
-	                   mov     cx,Jet2Y
-	                   je      CheckCollide2
 	                   ret
 CheckHit endp
-
-
-CheckHit_Left proc near
-	                   mov     di,1
-	                   xor     si,si
-
-					   mov     bp,bx			
-					   
-	                   mov     ax,Jet1X				; mov Jet X-coordinates to AX
-	                   mov     cx,Jet1Y				; mov Jet Y-coordinates to CX
-	                   
-	CheckCollide_Left:      
-	                   ;-------(Bullet-PointA)-----------
-					   mov     bx,bp
-	                   mov     dx,bulletsX[bx]
-	                   mov     Vx,dx				;Vx=Curret Bullet's X
-                 
-	                   mov     dx,bulletsY[bx]
-	                   mov     Vy,dx				;Vy=Current Bullet's Y
-					   
-	                   sub     Vx,ax				;Vx= BulletX-JetX
-	                   sub     Vy,cx				;Vy= BulletY-JetY
-						;-------(PointB-PointA)-----------
-	                   mov     Wx,0					;Wx=0
-	                   mov     Wy,JetH				;Wy=JetH
-                 
-	                   call    CrossProduct			;Call First Cross Product
-                 
-	                   push    cx
-                 		
-						;-------(Bullet-PointB)-----------
-													;Vx= The Same (BulletX-JetX)
-	                   sub     Vy,JetH				;Vy= BulletY-JetY-JetH
-						;-------(PointC-PointB)-----------
-
-	                   mov     Wx,-(JetH/2+1)		;?Wx= ..........
-	                   mov     Wy,-JetH/2			;Wy= -JetH/2
-                 
-	                   call    CrossProduct			;Call 2nd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ah,cl				;shift ah to get sign bit
-	                   shr     ch,cl				;shift ch to get Sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_Left	;check is done
-													;If equal (Can be inside the Triange ) need to check the last side 
-
-
-	                   push    ax
-					   ;-------(Bullet-PointC)-----------
-	                   sub     Vx,JetH/2+1			;?Vx= The Same (BulletX-JetX) -
-	                   add     Vy,JetH/2			;?Vy= BulletY-JetY-JetH/2
-	                   neg     Wx					;Wx= -ve previous Wx
-					   								;Wy= -JetH/2  Same Wy
-                 
-	                   call    CrossProduct			;Call 3rd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ch,cl				;shift ch to get sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_Left	;check is done
-													;If equal (Bullet is inside the Triange ) 
-                 
-	                   add     si,1
-	                   cmp     di,1
-	                   jne     HurtTwo_Left
-
-	                   dec     Health1
-	                   cmp     Health1,7
-	                   jne     CollisionCheckDone_Left
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_Left
-					   
-	CheckCollide2_Left:     jmp     CheckCollide_Left
-		
-	HurtTwo_Left:           
-	                   dec     Health2
-	                   cmp     Health2,7
-	                   jne     CollisionCheckDone_Left
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_Left
-					   
-	CollisionCheckDone_Left:
-	                   inc     di
-	                   cmp     di,2
-	                   mov     ax,Jet2X
-	                   mov     cx,Jet2Y
-	                   je      CheckCollide2_Left
-	                   ret
-CheckHit_Left endp
-
-
-CheckHit_UP proc near
-	                   mov     di,1
-	                   xor     si,si
-
-					   mov     bp,bx			
-					   
-	                   mov     ax,Jet1X				; mov Jet X-coordinates to AX
-	                   mov     cx,Jet1Y				; mov Jet Y-coordinates to CX
-	                   
-	CheckCollide_UP:      
-	                   ;-------(Bullet-PointA)-----------
-					   mov     bx,bp
-	                   mov     dx,bulletsX[bx]
-	                   mov     Vx,dx				;Vx=Curret Bullet's X
-                 
-	                   mov     dx,bulletsY[bx]
-	                   mov     Vy,dx				;Vy=Current Bullet's Y
-					   
-	                   sub     Vx,ax				;Vx= BulletX-JetX
-	                   sub     Vy,cx				;Vy= BulletY-JetY
-						;-------(PointB-PointA)-----------
-	                   mov     Wx,JetH				;Wx=JetH
-	                   mov     Wy,0					;Wy=0
-                 
-	                   call    CrossProduct			;Call First Cross Product
-                 
-	                   push    cx
-                 		
-						;-------(Bullet-PointB)-----------
-													;Vy= The Same (BulletY-JetY)
-	                   sub     Vx,JetH				;Vx= BulletX-JetX-JetH
-						;-------(PointC-PointB)-----------
-
-	                   mov     Wx,-JetH/2			;?Wx= -JetH/2
-	                   mov     Wy,-(JetH/2+1)		;Wy= ...?.....
-                 
-	                   call    CrossProduct			;Call 2nd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ah,cl				;shift ah to get sign bit
-	                   shr     ch,cl				;shift ch to get Sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_UP	;check is done
-													;If equal (Can be inside the Triange ) need to check the last side 
-
-
-	                   push    ax
-					   ;-------(Bullet-PointC)-----------
-	                   sub     Vx,JetH/2			;?Vx= The Same (BulletX-JetX) -
-	                   add     Vy,JetH/2			;?Vy= BulletY-JetY-JetH/2 ---- need edit--------
-	                   neg     Wy					;Wy= -ve previous Wy
-					   								;Wx= -JetH/2  Same Wx
-                 
-	                   call    CrossProduct			;Call 3rd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ch,cl				;shift ch to get sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_UP	;check is done
-													;If equal (Bullet is inside the Triange ) 
-                 
-	                   add     si,1
-	                   cmp     di,1
-	                   jne     HurtTwo_UP 
-
-	                   dec     Health1
-	                   cmp     Health1,7
-	                   jne     CollisionCheckDone_UP
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_UP
-					   
-	CheckCollide2_UP:     jmp     CheckCollide_UP
-		
-	HurtTwo_UP:           
-	                   dec     Health2
-	                   cmp     Health2,7
-	                   jne     CollisionCheckDone_UP
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_UP
-					   
-	CollisionCheckDone_UP:
-	                   inc     di
-	                   cmp     di,2
-	                   mov     ax,Jet2X
-	                   mov     cx,Jet2Y
-	                   je      CheckCollide2_UP
-	                   ret
-CheckHit_UP endp
-
-
-CheckHit_Down proc near
-	                   mov     di,1
-	                   xor     si,si
-
-					   mov     bp,bx			
-					   
-	                   mov     ax,Jet1X				; mov Jet X-coordinates to AX
-	                   mov     cx,Jet1Y				; mov Jet Y-coordinates to CX
-	                   
-	CheckCollide_Down:      
-	                   ;-------(Bullet-PointA)-----------
-					   mov     bx,bp
-	                   mov     dx,bulletsX[bx]
-	                   mov     Vx,dx				;Vx=Curret Bullet's X
-                 
-	                   mov     dx,bulletsY[bx]
-	                   mov     Vy,dx				;Vy=Current Bullet's Y
-					   
-	                   sub     Vx,ax				;Vx= BulletX-JetX
-	                   sub     Vy,cx				;Vy= BulletY-JetY
-						;-------(PointB-PointA)-----------
-	                   mov     Wx,JetH				;Wx=JetH
-	                   mov     Wy,0					;Wy=0
-                 
-	                   call    CrossProduct			;Call First Cross Product
-                 
-	                   push    cx
-                 		
-						;-------(Bullet-PointB)-----------
-													;Vy= The Same (BulletY-JetY)
-	                   sub     Vx,JetH				;Vx= BulletX-JetX-JetH
-						;-------(PointC-PointB)-----------
-
-	                   mov     Wx,-JetH/2			;?Wx= -JetH/2
-	                   mov     Wy,(JetH/2+1)		;Wy= ...?.....
-                 
-	                   call    CrossProduct			;Call 2nd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ah,cl				;shift ah to get sign bit
-	                   shr     ch,cl				;shift ch to get Sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_Down	;check is done
-													;If equal (Can be inside the Triange ) need to check the last side 
-
-
-	                   push    ax
-					   ;-------(Bullet-PointC)-----------
-	                   sub     Vx,JetH/2			;?Vx= The Same (BulletX-JetX) -
-	                   add     Vy,-(JetH/2+1)		;?Vy= BulletY-JetY-JetH/2 ---- need edit--------
-	                   neg     Wy					;Wy= -ve previous Wy
-					   								;Wx= -JetH/2  Same Wx
-                 
-	                   call    CrossProduct			;Call 3rd Cross Product
-                 
-	                   pop     ax
-                 
-	                   mov     cl,7
-	                   shr     ch,cl				;shift ch to get sign bit
-	                   cmp     ah,ch				;compare ch & ah if not equal (Diff Signs)->Outside triangle 
-	                   jne     CollisionCheckDone_Down	;check is done
-													;If equal (Bullet is inside the Triange ) 
-                 
-	                   add     si,1
-	                   cmp     di,1
-	                   jne     HurtTwo_Down
-
-	                   dec     Health1
-	                   cmp     Health1,7
-	                   jne     CollisionCheckDone_Down
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_Down
-					   
-	CheckCollide2_Down:     jmp     CheckCollide_Down
-		
-	HurtTwo_Down:           
-	                   dec     Health2
-	                   cmp     Health2,7
-	                   jne     CollisionCheckDone_Down
-	                   mov     Won,di
-	                   jmp     CollisionCheckDone_Down
-					   
-	CollisionCheckDone_Down:
-	                   inc     di
-	                   cmp     di,2
-	                   mov     ax,Jet2X
-	                   mov     cx,Jet2Y
-	                   je      CheckCollide2_Down
-	                   ret
-CheckHit_Down endp

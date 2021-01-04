@@ -15,44 +15,46 @@
 	Wy            dw  ?
 
 	Won           dw  0
-
-	Name1         db  'Player1NameZZZZ$'                      	;change to dp 16 dup ($)
-	Score1        db  'Health ', 8 dup(219) ,'$'
-	Health1       dw  15                                      	;where 15 = Health + barCount = 7 + 8
-	
-	Name2         db  'Player2NameZZZZ$'                      	;change to dp 16 dup ($)
-	Score2        db  'Health ', 8 dup(219) ,'$'
-	Health2       dw  15                                      	;where 15 = Health + barCount = 7 + 8
-	
 	WinMessage    db  'PLAYERX WON! PRESS ANY KEY TO EXIT','$'
 
-
-	ReloadTime    equ 3
-
-	Window_Width  equ 280h                                    	;the width of the window (640 pixels)
-	Window_Height equ 1E0h                                    	;the height of the window (480 pixels)
-	Window_Bounds dw  6                                       	;variable used to check collisions early
-    Window_Score  dw  50
+	Name1         db  'Player1NameZZZZ$'                      	;change to dp 16 dup ($)
+	Name2         db  'Player2NameZZZZ$'                      	;change to dp 16 dup ($)
+	
+	Score1        db  'Health ', 8 dup(219) ,'$'
+	Score2        db  'Health ', 8 dup(219) ,'$'
+	
+	Health1       dw  15                                      	;where 15 = Health + barCount = 7 + 8
+	Health2       dw  15                                      	;where 15 = Health + barCount = 7 + 8
 
 	LastTime      db  0                                       	;used to check if time has passed
 
 	Jet1X         dw  10h                                     	;X Position (Column) of Jet
-	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
-	Jet1Z         dw  2                                      	;-1 up, 1 down, 2 right, -2 left
-	Jet1Reload    db  0
-	Jet1State     db  4                                       	;4 double bullet
-
 	Jet2X         dw  0220h                                   	;X Position (Column) of Jet (300 pixels)
+	Jet1Y         dw  30h                                     	;Y Position (Line) of Jet
 	Jet2Y         dw  30h                                     	;Y Position (Line) of Jet
+	Jet1Z         dw  2                                       	;-1 up, 1 down, 2 right, -2 left
 	Jet2Z         dw  -2                                      	;-1 up, 1 down, 2 right, -2 left
-	Jet2Reload    db  0
-	Jet2State     db  0                                       	;4 double bullet
+	
+	Jet1Reload    dw  0
+	Jet2Reload    dw  0
+	Jet1State     dw  4                                       	;4 double bullet
+	Jet2State     dw  0                                       	;4 double bullet
 
+	Colour1       equ 0fh
+	Colour2       equ 0fh
+	ReloadTime    equ 3
+
+	Window_Width  equ 280h                                    	;the width of the window (640 pixels)
+	Window_Height equ 1E0h                                    	;the height of the window (480 pixels)
+	Window_Bounds equ 6                                       	;variable used to check collisions early
+	Window_Score  equ 50
+	
 	JetW          equ 20                                      	;Jet Width
 	JetH          equ 20                                      	;Jet Height
 	JetV          equ 4                                       	;Jet Velocity
 
 	maxBullets    equ 16                                      	;Maximum number of bullets
+	
 	bulletsX      dw  maxBullets dup (?)                      	;Array of X locations of the bullets
 	bulletsY      dw  maxBullets dup (?)                      	;Array of Y locations of the bullets
 	bulletsZ      dw  maxBullets dup (?)                      	;bulletsZ   db  num dup(?)     	;-1 up, 1 down, 2 right, -2 left
@@ -61,41 +63,42 @@
 
 .code
 
-	          include util.asm
-	          include jets.asm
-	          include bullets.asm
+	                   include util.asm
+	                   include jets.asm
+	                   include bullets.asm
 
 main proc far
-	          mov     ax,@data
-	          mov     ds,ax
+	                   mov     ax,@data
+	                   mov     ds,ax
+	                   mov     es,ax
 
-	CheckTime:
-	          call    FireBullets
-	          call    MoveJets
+	CheckTime:         
+	                   call    FireBullets
+	                   call    MoveJets
                                    
-	          mov     ah,2ch        	;get system time
-	          int     21h           	;CH = hour, CL = minute, DH = second, DL = millisecond
-	          cmp     dl,LastTime   	;is current time = previous time?
-	          je      CheckTime     	;if yes, check again later
-	          mov     LastTime,dl   	;update last time
+	                   mov     ah,2ch            	;get system time
+	                   int     21h               	;CH = hour, CL = minute, DH = second, DL = millisecond
+	                   cmp     dl,LastTime       	;is current time = previous time?
+	                   je      CheckTime         	;if yes, check again later
+	                   mov     LastTime,dl       	;update last time
                 
 	
-	          mov     ax,12h
-	          int     10h           	;Sets video mode to 640*480 / Clear screen
+	                   mov     ax,12h
+	                   int     10h               	;Sets video mode to 640*480 / Clear screen
                                    
-	          call    AdvanceBullets
+	                   call    AdvanceBullets
 
-	          call    DisplayNames
-	          call    DrawLives     	;call    DrawScores
-	          call    DRAW__JET     	;Sandy's draw	-Ziyad's is DrawJets
-	          call    DrawBullets
+	                   call    DisplayNames
+	                   call    DrawLives         	;call    DrawScores
+	                   call    DRAW__JET         	;Sandy's draw	-Ziyad's is DrawJets
+	                   call    DrawBullets
 
-	          cmp     Won,0
-	          jz      CheckTime     	;If no winner yet, continue game loop
+	                   cmp     Won,0
+	                   jz      CheckTime         	;If no winner yet, continue game loop
 
-	          call    EndGame       	;Else, end the game
+	                   call    EndGame           	;Else, end the game
 					   
-	          mov     ax,4C00h
-	          int     21h           	;terminates the application
+	                   mov     ax,4C00h
+	                   int     21h               	;terminates the application
 main endp
 end main
