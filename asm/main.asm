@@ -9,6 +9,30 @@
 .stack 64
 .data
 
+	;SpawnX            dw  ?
+	;SpawnY            dw  ?
+	;SpawnPower        dw  ?                                       	;value from 1-6
+	;NextPowerCallTime db  ?                                       	;value from 0~59 ie:time in sec
+	
+	;----------- variables for the first screen-----------------
+	; 2 variables for each player to enter their names in
+	; the max allowed # of char is 15
+	MinX          equ 9
+	CursorX       db  MinX
+      
+	msg1          db  'Please enter your name:','$'
+	msg2          db  'Press any key to continue:','$'
+	
+	Name1         db  16 DUP(?),'$'
+	;Name2         db  16 DUP(?),'$'
+	Name2         db  'PLAYER2NAMEZZZZ','$'
+	
+	;------------variables for the second screen----------------
+	; the menus the player will choose from
+	Option1       db  'To start chatting press F1','$'
+	Option2       db  'To start playing press F2','$'
+	Option3       db  'To end the program press ESC','$'
+	
 	Vx            dw  ?
 	Vy            dw  ?
 	Wx            dw  ?
@@ -17,9 +41,6 @@
 	Won           dw  0
 	WinMessage    db  'PLAYERX WON! PRESS ANY KEY TO EXIT','$'
 
-	Name1         db  'Player1NameZZZZ$'                      	;change to dp 16 dup ($)
-	Name2         db  'Player2NameZZZZ$'                      	;change to dp 16 dup ($)
-	
 	Score1        db  'Health ', 8 dup(219) ,'$'
 	Score2        db  'Health ', 8 dup(219) ,'$'
 	
@@ -63,42 +84,35 @@
 
 .code
 
-	                   include util.asm
-	                   include jets.asm
-	                   include bullets.asm
+	       include util.asm
+	       include jets.asm
+	       include bullets.asm
+	       include modes.asm
+	;include powers.asm
 
 main proc far
-	                   mov     ax,@data
-	                   mov     ds,ax
-	                   mov     es,ax
+	       mov     ax,@data
+	       mov     ds,ax
+	       mov     es,ax
+	       
+	       call    MainMenu
+		   
+	Choice:
+	       mov     ah,0
+	       int     16h
 
-	CheckTime:         
-	                   call    FireBullets
-	                   call    MoveJets
-                                   
-	                   mov     ah,2ch            	;get system time
-	                   int     21h               	;CH = hour, CL = minute, DH = second, DL = millisecond
-	                   cmp     dl,LastTime       	;is current time = previous time?
-	                   je      CheckTime         	;if yes, check again later
-	                   mov     LastTime,dl       	;update last time
-                
-	
-	                   mov     ax,12h
-	                   int     10h               	;Sets video mode to 640*480 / Clear screen
-                                   
-	                   call    AdvanceBullets
+	       cmp     ah,59      	;scancode for F1			TODO
+	       cmp     ah,60      	;scancode for F2
+	       je      Game
+	       cmp     ah,1       	;scancode for Esc
+	       jne     Choice
+	       jmp     Exit
 
-	                   call    DisplayNames
-	                   call    DrawLives         	;call    DrawScores
-	                   call    DRAW__JET         	;Sandy's draw	-Ziyad's is DrawJets
-	                   call    DrawBullets
+	Game:  
+	       call    Play
 
-	                   cmp     Won,0
-	                   jz      CheckTime         	;If no winner yet, continue game loop
-
-	                   call    EndGame           	;Else, end the game
-					   
-	                   mov     ax,4C00h
-	                   int     21h               	;terminates the application
+	Exit:  
+	       mov     ax,4C00h
+	       int     21h        	;terminates the application
 main endp
 end main

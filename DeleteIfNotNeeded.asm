@@ -278,3 +278,147 @@ CheckHit_Down proc near
 	                   je      CheckCollide2_Down
 	                   ret
 CheckHit_Down endp
+
+
+DrawJets proc near
+                         
+	                               mov  ax,0c0fh                      	;drawing configuration
+	;-------------------Left-------------
+
+	                               mov  cx,Jet1X                      	;cx has starting x coordinate (left-most point)
+	                               mov  dx,Jet1Y                      	;dx has ending y coordinate (highest point)
+	                               add  dx,JetH                       	;dx now has starting y coordinate (lowest point)
+    
+	                               mov  bx,Jet1X
+	                               add  bx,JetW                       	;bx now has ending x coordinate (right-most point)
+    
+	height1:                       
+	                               push cx                            	;stores column (x coordinate) we started drawing line on
+	wid1:                          
+	                               int  10h
+	                               inc  cx
+	                               cmp  cx,bx
+	                               jnz  wid1                          	;loop draws line from cx to bx (start to end)
+        
+	                               dec  bx                            	;decrement ending x coordinate
+	                               pop  cx                            	;reset cx to starting x coordinate
+	                               inc  cx                            	;increment it to draw next line from next point
+	                               dec  dx                            	;decrement y coordinate (go up to draw line above)
+	                               cmp  dx,Jet1Y
+	                               jnz  height1                       	;loop draws triangle
+        
+	                               dec  cx                            	;decrement column to be on center of jet
+	                               mov  bx,dx
+	                               sub  bx,3                          	;store ending row of cannnon in bx (3 steps above current dx)
+	gun1:                          
+	                               int  10h
+	                               dec  dx
+	                               cmp  dx,bx
+	                               jnz  gun1                          	;loop draws cannon
+
+	;-------------------Right-------------
+	                               mov  cx,Jet2X
+	                               mov  dx,Jet2Y
+	                               add  dx,JetH
+    
+	                               mov  bx,Jet2X
+	                               add  bx,JetW
+    
+	height2:                       
+	                               push cx
+	wid2:                          
+	                               int  10h
+	                               inc  cx
+	                               cmp  cx,bx
+	                               jnz  wid2
+        
+	                               dec  bx
+	                               pop  cx
+	                               inc  cx
+	                               dec  dx
+	                               cmp  dx,Jet2Y
+	                               jnz  height2
+        
+	                               dec  cx
+	                               mov  bx,dx
+	                               sub  bx,3
+	gun2:                          
+	                               int  10h
+	                               dec  dx
+	                               cmp  dx,bx
+	                               jnz  gun2
+	                               ret
+DrawJets endp
+
+Draw_Jets proc near
+
+	;-------------------Left-------------
+
+	                               MOV  CX, Jet1X
+	                               MOV  DX, Jet1Y
+	                               MOV  BX, DX
+
+	DRAW_LEFT_JET:                 
+	                               MOV  AH,0ch
+	                               MOV  AL,08h
+	                               INT  10h
+	                               INC  DX
+	                               MOV  AX, DX
+	                               SUB  AX, Jet1Y
+	                               CMP  AX, JetH
+	                               JNG  DRAW_LEFT_JET
+	                               MOV  DX, BX
+	                               INC  DX
+	                               MOV  BX, DX
+	                               INC  CX
+	                               MOV  AX, DX
+	                               SUB  AX, Jet1Y
+	                               CMP  AX, JetH
+	                               JNG  DRAW_LEFT_JET
+
+	LINE:                          
+	                               MOV  AH,0ch
+	                               MOV  AL,0fh
+	                               INT  10H
+	                               INC  CX
+	                               MOV  AX, CX
+	                               SUB  AX, Jet1X
+	                               CMP  AX, JetW
+	                               JNG  LINE
+
+	;-------------------Right-------------
+	;-------------------------------------------
+
+	                               MOV  CX, Jet2X
+	                               MOV  DX, Jet2Y
+	                               MOV  BX, DX
+
+	DRAW_RIGHT_JET:                
+	                               MOV  AH,0ch
+	                               MOV  AL,04h
+	                               INT  10h
+	                               INC  DX
+	                               MOV  AX, DX
+	                               SUB  AX, Jet2Y
+	                               CMP  AX, JetH
+	                               JNG  DRAW_RIGHT_JET
+	                               MOV  DX, BX
+	                               INC  DX
+	                               MOV  BX, DX
+	                               DEC  CX
+	                               MOV  AX, DX
+	                               SUB  AX, Jet2Y
+	                               CMP  AX, JetH
+	                               JNG  DRAW_RIGHT_JET
+
+	LINE_2:                        
+	                               MOV  AH,0ch
+	                               MOV  AL,0fh
+	                               INT  10H
+	                               DEC  CX
+	                               MOV  AX, Jet2X
+	                               SUB  AX, CX
+	                               CMP  AX, JetW
+	                               JNG  LINE_2
+	                               ret
+Draw_Jets endp

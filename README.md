@@ -7,11 +7,7 @@ A remake of the 2 player 1975 Atari game.
 Run the batch file 'Jet Fighter.bat'.
 
 ### TO DO
-Second jet draw, blind spot, Colored jets?								Sarah & Sandy
-
-Name input & check for F1,F2,Esc inputs									Salma
-
-Collisions for all 4 orientations, and for both jets					Sarah & Ziyad
+blind spots
 
 1	Shield -> after collision check for shield before live--			^^^^
 
@@ -25,5 +21,7 @@ Collisions for all 4 orientations, and for both jets					Sarah & Ziyad
 		
 Powerups RNG, spawn, timer, etc											Khaled
 Powerups sprites														Ziyad & Sandy
-	
-Delete one of the drawjets
+
+Notes:
+    Backspace in name entry
+    RNG?
