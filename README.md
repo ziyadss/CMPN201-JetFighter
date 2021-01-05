@@ -9,7 +9,7 @@ Run the batch file 'Jet Fighter.bat'.
 ### TO DO
 blind spots
 
-1	Shield -> after collision check for shield before live--			^^^^
+1	Shield -> after collision check for shield before live--			Sarah & Ziyad
 
 2	Speed up jet -> multiply speed by const if powerup is on			Sandy
 
@@ -25,6 +25,6 @@ Powerups sprites														Ziyad & Sandy
 
 Notes:
 
-    Backspace in name entry
+    Backspace in name entry?
 
     RNG?
