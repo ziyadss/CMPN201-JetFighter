@@ -42,7 +42,7 @@ PowerPosition proc near
             xor dx,dx                   ;reset bx
             div bx                      ;DX = 0~550
             add dx,50                   ;DX = 50~600
-            mov SpawnX,dx               ; random location of SpawnX = 50~600
+            mov XPOSITION,dx            ; random location of XPOSITION = 50~600
 
             mov ah,2ch              	;get system time
             int 21h               	    ;CH = hour, CL = minute, DH = second, DL = millisecond
@@ -56,7 +56,7 @@ PowerPosition proc near
             xor dx,dx
             div bx                     ;DX = 0~400
             add dx,40                  ;DX = 40~440
-            mov SpawnY,dx              ;random location of SpawnY = 40~440
+            mov YPOSITION,dx           ;random location of YPOSITION = 40~440
 
             mov ah,2ch                 ;get system time
 	        int 21h                    ;CH = hour, CL = minute, DH = second, DL = millisecond
@@ -70,32 +70,6 @@ PowerPosition proc near
             xor dx,dx
             div bx                     ;DX = 0~5
             inc dx                     ;DX = 1~6 
-            mov SpawnPower,dx          ;Random Powerup = 1~6
+            mov POWER_UP,dx            ;Random Powerup = 1~6
             ret
 PowerPosition endp
-
-DrawPower proc near
-    cmp SpawnPower,0
-    je NoPower
-    
-    mov ax,0C0Fh
-    mov cx,SpawnX
-    add cx,7
-    mov bx,cx
-    mov dx,SpawnY
-    add dx,7
-    
-    PowerSquare:
-    DrawLine:
-    int 10h
-    dec cx  
-    cmp cx,SpawnX
-    jne DrawLine 
-    mov cx,bx  
-    dec dx
-    cmp dx,SpawnY 
-    jne PowerSquare
-    
-    NoPower:
-    ret
-DrawPower endp

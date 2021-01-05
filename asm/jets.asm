@@ -236,31 +236,6 @@ Check_Right_Jet_Movement_Proc proc near
 								   ret
 Check_Right_Jet_Movement_Proc endp
 
-;---------------------------Dizzy PowerUp---------------------------------------
-
-Dizzy Proc near 
-
-	;if keypress "W"=Up   make it Down
-		cmp  ah, 11h  		
-		mov  ah, 1Fh
-		ret 
-	;if keypress "S"=Down   make it Up
-		cmp  ah, 1Fh
-		mov  ah, 11h
-		ret
-
-	;if keypress "A"=Left   make it Right
-		cmp  ah, 1Eh
-		mov  ah, 20h
-		ret
-	;if keypress "D"=Right   make it Left
-		cmp  ah, 20h
-		mov  ah, 1Eh
-		ret
-	ret 
-Dizzy ENDP
-
-
 DrawJets PROC near
 
 			XOR SI,SI			;Set SI 0

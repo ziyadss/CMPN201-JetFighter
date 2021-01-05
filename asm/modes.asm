@@ -150,7 +150,6 @@ MainMenu proc near
 MainMenu endp
 
 Play proc near
-
 	;Call FirstPowerSpawnTime
 	CheckTime:            
 	                      call FireBullets
@@ -161,7 +160,6 @@ Play proc near
 	                      cmp  dl,LastTime          	;is current time = previous time?
 	                      je   CheckTime            	;if yes, check again later
 	                      mov  LastTime,dl          	;update last time
-                
 	
 	                      mov  ax,12h
 	                      int  10h                  	;Sets video mode to 640*480 / Clear screen

@@ -9,9 +9,12 @@
 .stack 64
 .data
 
-	;SpawnX            dw  ?
-	;SpawnY            dw  ?
-	;SpawnPower        dw  ?                                       	;value from 1-6
+	;include pics.asm
+
+	;POWER_UP      DW      2
+	;XPOSITION     DW      20H
+	;YPOSITION     DW      20H
+	
 	;NextPowerCallTime db  ?                                       	;value from 0~59 ie:time in sec
 	
 	;----------- variables for the first screen-----------------
@@ -24,8 +27,7 @@
 	msg2          db  'Press any key to continue:','$'
 	
 	Name1         db  16 DUP(?),'$'
-	;Name2         db  16 DUP(?),'$'
-	Name2         db  'PLAYER2NAMEZZZZ','$'
+	Name2         db  16 DUP(?),'$'
 	
 	;------------variables for the second screen----------------
 	; the menus the player will choose from
@@ -59,14 +61,13 @@
 	Jet1Reload    dw  0
 	Jet2Reload    dw  0
 
-	;PowerUP (1->Shield , 2->Speed up jet , 3->Dizzy , 5->Freeze , 6->Faster bullets )
-	Jet1State     dw  3                                       	;PowerUP Variable for Jet1
+	;PowerUP (1->Shield , 2->Speed up jet , 3->Dizzy , 4-> Double bullets , 5->Freeze , 6->Faster bullets )
+	Jet1State     dw  4                                       	;PowerUP Variable for Jet1
 	Jet2State     dw  3                                       	;PowerUP Variable for Jet1
 
-	
 	Colour1       equ 0fh
 	Colour2       equ 0fh
-	ReloadTime    equ 3
+	ReloadTime    equ 5
 
 	Window_Width  equ 280h                                    	;the width of the window (640 pixels)
 	Window_Height equ 1E0h                                    	;the height of the window (480 pixels)
@@ -92,6 +93,7 @@
 	       include bullets.asm
 	       include modes.asm
 	;include powers.asm
+	;include drawp.asm
 
 main proc far
 	       mov     ax,@data
