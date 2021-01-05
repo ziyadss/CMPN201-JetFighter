@@ -1,15 +1,33 @@
-MoveJets proc near ;sandy
+MoveJets proc near 
 	;--------LEFT Jet Movement---------------
 	;check if any key is pressed(Y-> continue N-> Check other Jet)
 	                               mov  ah,01h
 	                               int  16h
 	                               jz   LR1                           	;if ZF=1 JZ->Jump if Zero to next Jet // if ZF=0 a key is pressed (check which key)
 
-	;check which key is pressed-After Excution (ah=scancode)
+	;check which key is pressed-After Excution (ah=scancode) ; remove from buffer
 									mov  ah,00h
 									int  16h
+
+	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
+								   cmp  Jet1State, 3
+								   jne	Normal1
+					;if keypress "W"=Up   make it Down
+									cmp  ah, 11h  		
+									je   Move_Left_Jet_Down 
+					;if keypress "S"=Down   make it Up
+									cmp  ah, 1Fh
+									je   Move_Left_Jet_Up
+
+					;if keypress "A"=Left   make it Right
+									cmp  ah, 1Eh
+									je   Move_Left_Jet_Right_PASS
+					;if keypress "D"=Right   make it Left
+									cmp  ah, 20h
+									je   Move_Left_Jet_Left
+
 	;if it's 'W' or 'w' move left jet Up
-	                               cmp  ah, 11h                       	;'w'/'W'
+	 Normal1:                       cmp  ah, 11h                       	;'w'/'W'
 	                               je   Move_Left_Jet_Up
 
 	;if it's 'S' or 's' move left jet Down
@@ -22,8 +40,9 @@ MoveJets proc near ;sandy
 
 	;if it's 'D' or 'd' move left jet Right
 	                               cmp  ah, 20h                       	;'d'/'D'
-	                               je   Move_Left_Jet_Right
+	Move_Left_Jet_Right_PASS:      je   Move_Left_Jet_Right
 
+							   
 	LR1:                           jmp  Check_Right_Jet_Movement
 
 	Move_Left_Jet_Up:            ;Move Left Jet upwards  
@@ -106,8 +125,26 @@ MoveJets endp
 
 Check_Right_Jet_Movement_Proc proc near
 
+	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
+								   cmp  Jet2State, 3
+								   jne	Normal2
+					;if keypress Up   make it Down
+									cmp  ah, 48h  		
+									je   Move_Right_Jet_Down 
+					;if keypress Down   make it Up
+									cmp  ah, 50h
+									je   Move_Right_Jet_Up
+
+					;if keypress Left   make it Right
+									cmp  ah, 4Bh
+									je   Move_To_Right
+					;if keypress Right   make it Left
+									cmp  ah, 4Dh
+									je   Move_Right_Jet_Left
+
+
 	;if it's 'Up arrow' move right jet Up
-	                               cmp  ah, 48h                       	;'Up'
+	 Normal2:                      cmp  ah, 48h                       	;'Up'
 	                               je   Move_Right_Jet_Up
 
 	;if it's 'Down arrow' move right jet Down
@@ -198,6 +235,31 @@ Check_Right_Jet_Movement_Proc proc near
 	                               
 								   ret
 Check_Right_Jet_Movement_Proc endp
+
+;---------------------------Dizzy PowerUp---------------------------------------
+
+Dizzy Proc near 
+
+	;if keypress "W"=Up   make it Down
+		cmp  ah, 11h  		
+		mov  ah, 1Fh
+		ret 
+	;if keypress "S"=Down   make it Up
+		cmp  ah, 1Fh
+		mov  ah, 11h
+		ret
+
+	;if keypress "A"=Left   make it Right
+		cmp  ah, 1Eh
+		mov  ah, 20h
+		ret
+	;if keypress "D"=Right   make it Left
+		cmp  ah, 20h
+		mov  ah, 1Eh
+		ret
+	ret 
+Dizzy ENDP
+
 
 DrawJets PROC near
 
