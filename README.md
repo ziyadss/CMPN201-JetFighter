@@ -21,7 +21,12 @@ Collisions for all 4 orientations, and for both jets					Sarah & Ziyad   (Done)
 
 6	Faster bullets ->													Salma							
 		
-Powerups RNG, spawn, timer, etc											Khaled          (Done)
+Powerups RNG, spawn, timer, etc											Khaled
+
 Powerups sprites														Ziyad & Sandy
-	
-Delete one of the drawjets                                              (Done)
+
+Notes:
+
+    Backspace in name entry
+
+    RNG?

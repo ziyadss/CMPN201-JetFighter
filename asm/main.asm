@@ -105,17 +105,22 @@ main proc far
 	       int     16h
 
 	       cmp     ah,59      	;scancode for F1			TODO
+	       
 	       cmp     ah,60      	;scancode for F2
 	       je      Game
+	       
 	       cmp     ah,1       	;scancode for Esc
-	       jne     Choice
-	       jmp     Exit
+	       je      Exit
 
+	       jmp     Choice     	;none of the three options, wait for other input
+	       
 	Game:  
 	       call    Play
-
+		   
 	Exit:  
 	       mov     ax,4C00h
 	       int     21h        	;terminates the application
+		   
+
 main endp
 end main
