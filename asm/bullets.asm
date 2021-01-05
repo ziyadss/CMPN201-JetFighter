@@ -182,7 +182,7 @@ AdvanceBullets proc near
 	                   ret
 AdvanceBullets endp
 
-CrossProduct proc near                               		;result in cx bx
+CrossProduct proc near                      		;result in cx bx
 	                   mov     ax,Vx
 	                   imul    Wy
 	                   mov     cx,dx
