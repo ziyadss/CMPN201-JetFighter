@@ -38,7 +38,8 @@ DrawPower PROC near
 		   JE DOUBLEBULLET
 		   JMP OUTT
 		   DOUBLEBULLET:
-		    CALL DRAW_DOUBLEBULLETS	
+		    CALL DRAW_DOUBLEBULLETS
+			
 
 OUTT:
 	ret			
@@ -54,10 +55,10 @@ OUTT:
 	       mov DI, offset img1  ; to iterate over the pixels
 	       jmp Start    	;Avoid drawing before the calculations
 	Drawit:
-	       MOV AH,0Ch   	;set the configuration to writing a pixel
+	       MOV AH,0Ch   		;set the configuration to writing a pixel
                mov al, [DI]     ; color of the current coordinates
-	       MOV BH,00h   	;set the page number
-	       INT 10h      	;execute the configuration
+	       MOV BH,00h   		;set the page number
+	       INT 10h      		;execute the configuration
 	Start: 
 		   inc DI
 	       DEC Cx       	;  loop iteration in x direction

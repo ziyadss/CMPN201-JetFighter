@@ -10,7 +10,7 @@ MoveJets proc near
 									int  16h
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
-								   cmp  Jet1State, 3
+								   cmp  Jet2Power, 3
 								   jne	Normal1
 					;if keypress "W"=Up   make it Down
 									cmp  ah, 11h  		
@@ -126,7 +126,7 @@ MoveJets endp
 Check_Right_Jet_Movement_Proc proc near
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
-								   cmp  Jet2State, 3
+								   cmp  Jet1Power, 3
 								   jne	Normal2
 					;if keypress Up   make it Down
 									cmp  ah, 48h  		

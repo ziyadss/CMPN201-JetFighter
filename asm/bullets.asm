@@ -33,7 +33,7 @@ FireBullets proc near
 	                      mov   cx, JetH/2
 
 	                      mov   dx,Jet1Z[si]              	;jet direction to be used as bullet direction
-	                      cmp   Jet1State[si],4
+	                      cmp   Jet1Power[si],4
 	                      jnz   OneBullet                 	;if double bullet not on, jump
 	                      mov   ax,1                      	;else set AX
 	                      dec   cx                        	;move first bullet one pixel
@@ -332,7 +332,8 @@ CheckHit proc near
 	;If equal (Bullet is inside the Triange )
                  
 	                      add   bp,1                      	;hit indicator, to remove bullet in AdvanceBullets
-	                   
+	                   	  cmp   Jet1Power[si],1
+						  je  	CollisionCheckDone
 	                      dec   Health1[si]               	;decrements Health of correct jet
 	                      cmp   Health1[si],7             	;if health lost all 8 bars (15 to 7), game ends
 	                      jne   CollisionCheckDone        	;game not over

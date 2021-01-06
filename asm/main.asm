@@ -62,8 +62,8 @@
 	Jet2Reload        dw      0
 
 	;PowerUP (1->Shield , 2->Speed up jet , 3->Dizzy , 4-> Double bullets , 5->Freeze , 6->Faster bullets )
-	Jet1State         dw      4                                       	;PowerUP Variable for Jet1
-	Jet2State         dw      3                                       	;PowerUP Variable for Jet2
+	Jet1Power         dw      2                                       	;PowerUP Variable for Jet1
+	Jet2Power         dw      1                                       	;PowerUP Variable for Jet2
 
 	Colour1           equ     0fh
 	Colour2           equ     0fh
@@ -74,8 +74,8 @@
 	Window_Bounds     equ     6                                       	;variable used to check collisions early
 	Window_Score      equ     50
 	
-	JetW              equ     20                                      	;Jet Width
-	JetH              equ     20                                      	;Jet Height
+	JetW              equ     25                                      	;Jet Width
+	JetH              equ     25                                      	;Jet Height
 	JetV              equ     4                                       	;Jet Velocity
 
 	maxBullets        equ     16                                      	;Maximum number of bullets
