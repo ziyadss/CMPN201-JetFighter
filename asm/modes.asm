@@ -172,8 +172,8 @@ Play proc near
 	                      call DrawJets
 	                      call DrawBullets
 			  
-	;call PowerPosition
-	;call DrawPower
+						  call PowerPosition
+						  call DrawPower
 
 	                      cmp  Won,0
 	                      jz   CheckTime            	;If no winner yet, continue game loop

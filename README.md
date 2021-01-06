@@ -7,8 +7,6 @@ A remake of the 2 player 1975 Atari game.
 Run the batch file 'Jet Fighter.bat'.
 
 ### TO DO
- blind spot								                                Sarah & Sandy   
-
 1	Shield -> after collision check for shield before live--			Sarah & Ziyad
 
 2	Speed up jet -> multiply speed by const if powerup is on			Sandy
@@ -19,7 +17,7 @@ Run the batch file 'Jet Fighter.bat'.
 		
 Powerups RNG, spawn, timer, etc											Khaled
 
-Powerups sprites														Ziyad & Sandy
+Powerups sprites size
 
 Notes:
 

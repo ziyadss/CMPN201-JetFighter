@@ -38,11 +38,10 @@ DrawPower PROC near
 		   JE DOUBLEBULLET
 		   JMP OUTT
 		   DOUBLEBULLET:
-		    CALL DRAW_DOUBLEBULLETS
-			
+		    CALL DRAW_DOUBLEBULLETS	
 
 OUTT:
-	JMP $			
+	ret			
 	DrawPower ENDP
 ;-------------------------FREEZE--------------------------------------------------
 	DRAW_FREEZE PROC NEAR
