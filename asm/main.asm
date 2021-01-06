@@ -63,7 +63,7 @@
 
 	;PowerUP (1->Shield , 2->Speed up jet , 3->Dizzy , 4-> Double bullets , 5->Freeze , 6->Faster bullets )
 	Jet1State         dw      4                                       	;PowerUP Variable for Jet1
-	Jet2State         dw      3                                       	;PowerUP Variable for Jet1
+	Jet2State         dw      3                                       	;PowerUP Variable for Jet2
 
 	Colour1           equ     0fh
 	Colour2           equ     0fh
