@@ -11,12 +11,13 @@
 
 	                  include pics.asm
 
-	POWER_UP          DW      2
-	XPOSITION         DW      20H
-	YPOSITION         DW      20H
+	POWER_UP          DW      0                                       	;intially there is no power up
+	XPOSITION         DW      ?
+	YPOSITION         DW      ?
 	
 	NextPowerCallTime db      ?                                       	;value from 0~59 ie:time in sec
-	
+	InitialPowerDelay equ     20                                      	;the time before the first powerup spawn 
+	PowerCallDelay	  equ     15										;the delay between each powerup call 
 	;----------- variables for the first screen-----------------
 	; 2 variables for each player to enter their names in
 	; the max allowed # of char is 15

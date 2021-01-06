@@ -150,7 +150,7 @@ MainMenu proc near
 MainMenu endp
 
 Play proc near
-	;Call FirstPowerSpawnTime
+	Call FirstPowerSpawnTime
 	CheckTime:            
 	                      call FireBullets
 	                      call MoveJets

@@ -1,4 +1,13 @@
 DrawPower PROC near
+
+
+	;Check if there is any power
+			cmp POWER_UP,0  ;0 means there is no power up
+			jne skip
+			ret 
+			skip:
+
+
 		   CMP POWER_UP, 5
 		   JE FREEZE
 		   JMP POWER2

@@ -1,7 +1,7 @@
 FirstPowerSpawnTime proc near
             mov ah,2ch              	;get system time
 	        int 21h   
-            add dh,20                 ;to wait X sec in this case 20 sec
+            add dh,InitialPowerDelay                 ;to wait X sec in this case 20 sec
             cmp dh,60
             jb WithInRange
             sub dh,60                   ;correction of secound if it's above 60 after setting delay
@@ -16,13 +16,13 @@ PowerPosition proc near
 	        int 21h                 	;CH = hour, CL = minute, DH = second, DL = millisecond
               
             cmp dh,NextPowerCallTime   
-            jg proceed
+            je proceed
 
             ret
 
         proceed: 
             mov NextPowerCallTime,dh
-            add NextPowerCallTime,5           ;Time X Delay between each function call     	
+            add NextPowerCallTime,PowerCallDelay           ;Time X Delay between each function call     	
             cmp NextPowerCallTime,60
 
             jb Keep
