@@ -149,7 +149,7 @@ AdvanceBullets proc near
 	vert:                 
 	                      mov   cl,2
 	                      sal   ax,cl
-	                      add   bulletsY[bx],ax           	;add +4/-4 to its X depending on direction
+	                      add   bulletsY[bx],ax           	;add +4/-4 to its Y depending on direction
 	                      cmp   bulletsY[bx],0
 	                      jle   removeBullet              	;if hit boundary, remove it
 	                      cmp   bulletsY[bx],Window_Height

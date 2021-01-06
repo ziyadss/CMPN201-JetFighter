@@ -9,13 +9,9 @@ Run the batch file 'Jet Fighter.bat'.
 ### TO DO
  blind spot								                                Sarah & Sandy   
 
-Collisions for all 4 orientations, and for both jets					Sarah & Ziyad   (Done)
-
 1	Shield -> after collision check for shield before live--			Sarah & Ziyad
 
 2	Speed up jet -> multiply speed by const if powerup is on			Sandy
-
-3	Dizzy -> check if reverse inside move jets							Sarah           (Done)
 
 5	Freeze ->															Khaled
 
