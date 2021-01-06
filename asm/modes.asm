@@ -161,8 +161,9 @@ Play proc near
 	                      je   CheckTime            	;if yes, check again later
 	                      mov  LastTime,dl          	;update last time
 	
-	                      mov  ax,12h
-	                      int  10h                  	;Sets video mode to 640*480 / Clear screen
+	                      mov  AX,4F02h
+						  mov  bx,101h
+	                      int  10h                  	;graph 640x480   256 colors
                                    
 	                      call AdvanceBullets
 
