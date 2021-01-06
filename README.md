@@ -23,4 +23,4 @@ Notes:
 
     Backspace in name entry?
 
-    RNG?
+    RNG fix minute problem
