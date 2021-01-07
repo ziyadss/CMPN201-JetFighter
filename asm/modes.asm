@@ -150,7 +150,7 @@ MainMenu proc near
 MainMenu endp
 
 Play proc near
-	Call FirstPowerSpawnTime
+	                      Call FirstPowerSpawnTime
 	CheckTime:            
 	                      call FireBullets
 	                      call MoveJets
@@ -162,7 +162,7 @@ Play proc near
 	                      mov  LastTime,dl          	;update last time
 	
 	                      mov  AX,4F02h
-						  mov  bx,101h
+	                      mov  bx,101h
 	                      int  10h                  	;graph 640x480   256 colors
                                    
 	                      call AdvanceBullets
@@ -172,8 +172,9 @@ Play proc near
 	                      call DrawJets
 	                      call DrawBullets
 			  
-						  call PowerPosition
-						  call DrawPower
+	                      call PowerPosition
+	                      call DrawPower
+	                      call PowerChecks
 
 	                      cmp  Won,0
 	                      jz   CheckTime            	;If no winner yet, continue game loop

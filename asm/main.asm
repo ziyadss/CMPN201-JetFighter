@@ -16,8 +16,8 @@
 	YPOSITION         DW      ?
 	
 	NextPowerCallTime db      ?                                       	;value from 0~59 ie:time in sec
-	InitialPowerDelay equ     20                                      	;the time before the first powerup spawn 
-	PowerCallDelay	  equ     15										;the delay between each powerup call 
+	InitialPowerDelay equ     5                                       	;the time before the first powerup spawn
+	PowerCallDelay    equ     9                                       	;the delay between each powerup call
 	;----------- variables for the first screen-----------------
 	; 2 variables for each player to enter their names in
 	; the max allowed # of char is 15
@@ -66,9 +66,13 @@
 	Jet1Power         dw      2                                       	;PowerUP Variable for Jet1
 	Jet2Power         dw      1                                       	;PowerUP Variable for Jet2
 
+	Jet1Timer         dw      0
+	Jet2Timer         dw      10
+
 	Colour1           equ     0fh
 	Colour2           equ     0fh
 	ReloadTime        equ     5
+	PowerupTime       equ     5
 
 	Window_Width      equ     280h                                    	;the width of the window (640 pixels)
 	Window_Height     equ     1E0h                                    	;the height of the window (480 pixels)
