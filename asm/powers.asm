@@ -143,46 +143,46 @@ PowerChecks proc near
 	                    ret
 PowerChecks endp
 
-	;DrawPower PROC near
-	;	              cmp     POWER_UP,0
-	;	              je      ENDING
-	;
-	;	              MOV     AX,ImgH*ImgW
-	;	              mov     cx,1
-	;	              mov     DI, offset img1	; to iterate over the pixels
-	;	              cmp     POWER_UP,1
-	;	              je      FirstPic
-	;
-	;	drawpowerloop:
-	;	              add     di,ax
-	;	              inc     cx
-	;	              cmp     cx,POWER_UP
-	;	              jnz     drawpowerloop
-	;
-	;	FirstPic:
-	;
-	;	              MOV     CX, XPOSITION  	;set the width (X) up to image width (based on image resolution)
-	;	              ADD     CX, imgW
-	;	              MOV     DX, YPOSITION  	;set the hieght (Y) up to image height (based on image resolution)
-	;	              ADD     DX, imgH
-	;
-	;	              jmp     Start          	;Avoid drawing before the calculations
-	;	Drawit:
-	;	              MOV     AH,0Ch         	;set the configuration to writing a pixel
-	;	              mov     al, [DI]       	; color of the current coordinates
-	;	              MOV     BH,00h         	;set the page number
-	;	              INT     10h            	;execute the configuration
-	;	Start:
-	;	              inc     DI
-	;	              DEC     Cx             	;  loop iteration in x direction
-	;	              CMP     CX, XPOSITION
-	;	              JNZ     Drawit         	;  check if we can draw c urrent x and y and excape the y iteration
-	;	              ADD     Cx, imgW       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
-	;	              DEC     DX             	;  loop iteration in y direction
-	;	              CMP     DX, YPOSITION
-	;	              JZ      ENDING         	;  both x and y reached 00 so end program
-	;	              Jmp     Drawit
-	;
-	;	ENDING:
-	;	              RET
-;DrawPower ENDP
+;DrawPower proc near
+;	              cmp POWER_UP,0
+;	              je  ENDING
+;
+;	              MOV AX,ImgH*ImgW
+;	              mov cx,1
+;	              mov DI, offset img1	; to iterate over the pixels
+;	              cmp POWER_UP,1
+;	              je  FirstPic
+;
+;	drawpowerloop:
+;	              add di,ax				;for every number, add H*W to offset to get to correct powerup drawing
+;	              inc cx
+;	              cmp cx,POWER_UP
+;	              jnz drawpowerloop
+;
+;	FirstPic:     
+;
+;	              MOV CX, XPOSITION  	;set the width (X) up to image width (based on image resolution)
+;	              ADD CX, imgW
+;	              MOV DX, YPOSITION  	;set the hieght (Y) up to image height (based on image resolution)
+;	              ADD DX, imgH
+;
+;	              jmp Start          	;Avoid drawing before the calculations
+;	Drawit:       
+;	              MOV AH,0Ch         	;set the configuration to writing a pixel
+;	              mov al, [DI]       	; color of the current coordinates
+;	              MOV BH,00h         	;set the page number
+;	              INT 10h            	;execute the configuration
+;	Start:        
+;	              inc DI
+;	              DEC Cx             	;  loop iteration in x direction
+;	              CMP CX, XPOSITION
+;	              JNZ Drawit         	;  check if we can draw c urrent x and y and excape the y iteration
+;	              ADD Cx, imgW       	;  if loop iteration in y direction, then x should start over so that we sweep the grid
+;	              DEC DX             	;  loop iteration in y direction
+;	              CMP DX, YPOSITION
+;	              JZ  ENDING         	;  both x and y reached 00 so end program
+;	              Jmp Drawit
+;
+;	ENDING:       
+;	              RET
+;DrawPower endp
