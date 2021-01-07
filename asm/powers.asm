@@ -75,26 +75,26 @@ PowerPosition proc near
 PowerPosition endp
 
 PowerChecks proc near
-	                    xor  si,si
+	                    xor  si,si								;Jet ptr
     
 	JetCheck:           
 	                    cmp  Jet1Power[si],0
-	                    je   NoTimer
+	                    je   NoTimer							;If power=0, then don't look at timer
 
 	                    cmp  Jet1Timer[si],0
-	                    je   RemovePower
+	                    je   RemovePower						;if timer=0, then remove power
 
 	                    dec  Jet1Timer[si]
 	                    jmp  NoTimer
 
 	RemovePower:        
-	                    mov  Jet1Power[si],0
+	                    mov  Jet1Power[si],0					;removes power
 
 	NoTimer:            
 	                    cmp  POWER_UP,0
-	                    je   NoPowerHit
+	                    je   NoPowerHit							;if no powerup, don't check for hit
                                 
-	                    mov  bx, JetW                        	;bullet coordinates, further adjusted later in code
+	                    mov  bx, JetW                        	;gun coordinates, further adjusted later in code
 	                    mov  cx, JetH/2
 
 	                    test Jet1Z[si],10000000b
@@ -110,34 +110,34 @@ PowerChecks proc near
 	                    xchg bx,cx                           	;if jet to up or down, exchange offsets
 
 	GunXY:              
-	                    add  bx,Jet1X[si]                    	;finalize bullet coordinates
+	                    add  bx,Jet1X[si]                    	;finalize gun coordinates
 	                    add  cx,Jet1Y[si]
 
-	                    cmp  bx,XPOSITION
+	                    cmp  bx,XPOSITION						;check gun is after XPOS
 	                    jl   NoPowerHit
 
 	                    sub  bx,ImgW
-	                    cmp  bx,XPosition
+	                    cmp  bx,XPOSITION						;check gun is before XPOS+Width
 	                    jg   NoPowerHit
 
-	                    cmp  cx,YPOSITION
+	                    cmp  cx,YPOSITION						;check gun is after YPOS
 	                    jl   NoPowerHit
 
 	                    sub  cx,ImgH
-	                    cmp  cx,YPOSITION
+	                    cmp  cx,YPOSITION						;check gun is before YPOS+Height
 	                    jg   NoPowerHit
 
 	                    mov  ax,POWER_UP
-	                    mov  Jet1Power[si],ax
-	                    mov  Jet1Timer[si],PowerupTime*100
-	                    mov  POWER_UP,0
+	                    mov  Jet1Power[si],ax					;give powerup to jet
+	                    mov  Jet1Timer[si],PowerupTime*100		;start powerup timer
+	                    mov  POWER_UP,0							;remove powerup from screen
 
 	NoPowerHit:         
 
 	                    cmp  si,2
 	                    je   CheckedBoth
 	                    mov  si,2
-	                    jmp  JetCheck
+	                    jmp  JetCheck							;check second jet
 
 	CheckedBoth:        
 	                    ret
