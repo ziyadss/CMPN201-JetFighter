@@ -1,4 +1,4 @@
-FirstPowerSpawnTime proc near
+FirstPowerSpawnTime proc near ;sandy
 	                    mov  ah,2ch                          	;get system time
 	                    int  21h
 	                    add  dh,InitialPowerDelay            	;to wait X sec in this case 20 sec
