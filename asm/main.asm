@@ -11,7 +11,7 @@
 
 	                  include pics.asm
 
-	POWER_UP          DW      0                                       	;intially there is no power up
+	POWER_UP          DW      2                                       	;intially there is no power up
 	XPOSITION         DW      ?
 	YPOSITION         DW      ?
 	
@@ -81,8 +81,9 @@
 	
 	JetW              equ     25                                      	;Jet Width
 	JetH              equ     25                                      	;Jet Height
-	JetV              equ     4                                       	;Jet Velocity
-
+	Jet1V              DW     4                                       	;Jet1 Velocity
+	Jet2V				DW		4										; Jet2 Velocity
+	speedUpVelocity		equ		4										;speedup velocity
 	maxBullets        equ     16                                      	;Maximum number of bullets
 	
 	bulletsX          dw      maxBullets dup (?)                      	;Array of X locations of the bullets
