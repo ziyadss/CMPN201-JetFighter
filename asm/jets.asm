@@ -8,6 +8,13 @@ MoveJets proc near
 	;check which key is pressed-After Excution (ah=scancode) ; remove from buffer
 									mov  ah,00h
 									int  16h
+	;check if power up is speedup velocity for jet1
+									cmp Jet1Power,2
+									jne Normal1
+									Mov Dx, Jet1V
+									add Dx, speedUpVelocity
+									mov Jet1V, Dx
+	
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
 								   cmp  Jet2Power, 3
@@ -49,7 +56,7 @@ MoveJets proc near
 								   cmp  Jet1Z,-1  						;check if the Jet's orientation is like the key press(Up)
 								   je	Move_Left_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
 								   mov  Jet1Z,-1 
-			Move_Left_Up:		   mov  ax,JetV
+			Move_Left_Up:		   mov  ax,Jet1V
 	                               sub  Jet1Y,ax
 
 	                               mov  ax,Window_Score              	;To make sure that the when the left jet moves up it doesn't move past the window
@@ -66,7 +73,7 @@ MoveJets proc near
 								   cmp  Jet1Z,1  						;check if the Jet's orientation is like the key press(Down)
 								   je	Move_Left_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
 								   mov  Jet1Z,1 
-			Move_Left_Down:		   mov  ax,JetV
+			Move_Left_Down:		   mov  ax,Jet1V
 	                               add  Jet1Y,ax
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -85,7 +92,7 @@ MoveJets proc near
 								   cmp  Jet1Z,-2  						;check if the Jet's orientation is like the key press(Left)
 								   je	Move_Left_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
 								   mov  Jet1Z,-2 
-			Move_Left_Left:		   mov  ax,JetV
+			Move_Left_Left:		   mov  ax,Jet1V
 	                               sub  Jet1X,ax
 
 	                               mov  ax,Window_Bounds
@@ -101,7 +108,7 @@ MoveJets proc near
 								   cmp  Jet1Z,2  						;check if the Jet's orientation is like the key press(Right)
 								   je	Move_Left_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
 								   mov  Jet1Z,2 
-			Move_Left_Right:	   mov  ax,JetV
+			Move_Left_Right:	   mov  ax,Jet1V
 	                               add  Jet1X,ax
 
 	                               mov  ax,Window_Width               	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -119,11 +126,19 @@ MoveJets proc near
 	                               Call Check_Right_Jet_Movement_Proc
 
 
-	            
+	            					MOV Jet1V, 4
+									Mov Jet2V, 4
 	                               ret
 MoveJets endp
 
 Check_Right_Jet_Movement_Proc proc near
+
+;check if power up is speedup velocity for jet2
+									cmp Jet2Power,2
+									jne Normal2
+									Mov Dx, Jet2V
+									add Dx, speedUpVelocity
+									mov Jet2V, Dx
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
 								   cmp  Jet1Power, 3
@@ -166,7 +181,7 @@ Check_Right_Jet_Movement_Proc proc near
 								   cmp  Jet2Z,-1  						;check if the Jet's orientation is like the key press(Up)
 								   je	Move_Right_Up					;if Y-> move jet , N-> set the jet's orientation (Z) to -1 (Up) then move
 								   mov  Jet2Z,-1 
-			Move_Right_Up:		   mov  ax,JetV
+			Move_Right_Up:		   mov  ax,Jet2V
 	                               sub  Jet2Y,ax
 
 	                               mov  ax,Window_Score              	;To make sure that the when the left jet moves up it doesn't move past the window
@@ -186,7 +201,7 @@ Check_Right_Jet_Movement_Proc proc near
 								   cmp  Jet2Z,1  						;check if the Jet's orientation is like the key press(Down)
 								   je	Move_Right_Down					;if Y-> move jet , N-> set the jet's orientation (Z) to 1 (Down) then move
 								   mov  Jet2Z,1 
-			Move_Right_Down: 	   mov  ax,JetV
+			Move_Right_Down: 	   mov  ax,Jet2V
 	                               add  Jet2Y,ax
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
@@ -204,7 +219,7 @@ Check_Right_Jet_Movement_Proc proc near
 								   cmp  Jet2Z,-2  						;check if the Jet's orientation is like the key press(Left)
 								   je	Move_Right_Left					;if Y-> move jet , N-> set the jet's orientation (Z) to -2 (Left) then move
 								   mov  Jet2Z,-2 
-			Move_Right_Left:	   mov  ax,JetV
+			Move_Right_Left:	   mov  ax,Jet2V
 	                               sub  Jet2X,ax
 
 	                               mov  ax,Window_Bounds
@@ -219,7 +234,7 @@ Check_Right_Jet_Movement_Proc proc near
 								   cmp  Jet2Z,2  						;check if the Jet's orientation is like the key press(Right)
 								   je	Move_Right_Right					;if Y-> move jet , N-> set the jet's orientation (Z) to 2 (Right) then move
 								   mov  Jet2Z,2 
-			Move_Right_Right:	   mov  ax,JetV
+			Move_Right_Right:	   mov  ax,Jet2V
 	                               add  Jet2X,ax
 
 	                               mov  ax,Window_Width               	;To make sure that the when the left jet moves Down it doesn't move past the window
