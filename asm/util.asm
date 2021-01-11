@@ -66,7 +66,6 @@ EndGame proc near
 	              mov     Jet2Power,0
 	              mov     Jet1Timer,0
 	              mov     Jet2Timer,0
-	              mov     Won,0
 					   
 	              mov     POWER_UP,0
 	
@@ -84,7 +83,10 @@ EndGame proc near
 	              cmp     bx,maxBullets
 	              jnz     ResetLoop
 				 
-	              mov     ax,12h
+	              cmp Won,0
+				  je EndGameDone
+				  
+				  mov     ax,12h
 	              int     10h
         
 	              mov     ah,2
@@ -95,9 +97,23 @@ EndGame proc near
 	              lea     dx,WinMessage 	;Check Won variable, get message
 	              int     21h
 
-	              mov     ah,0
-	              int     16h
-	;then?
+	              mov ah,2ch
+				  int 21h
+				  mov LastTime,dh
+				  add LastTime,5
+				  cmp LastTime,59
+				  jng WaitEndMessage
+				  sub LastTime,60
+				  
+				  WaitEndMessage:
+				  mov ah,2ch
+				  int 21h
+				  cmp LastTime,dh
+				  jne WaitEndMessage
+				  
+				  EndGameDone:
+				  
+				  mov     Won,0
 	              ret
 
 EndGame endp

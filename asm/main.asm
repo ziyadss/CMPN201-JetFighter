@@ -72,7 +72,7 @@
 	Wy                dw      ?
 
 	Won               dw      0
-	WinMessage        db      ' WON! PRESS ANY KEY TO EXIT','$'
+	WinMessage        db      ' WON!','$'
 
 	Score1            db      'Health ', 8 dup(219) ,'$'
 	Score2            db      'Health ', 8 dup(219) ,'$'
