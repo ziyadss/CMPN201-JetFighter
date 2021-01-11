@@ -101,3 +101,33 @@ EndGame proc near
 	              ret
 
 EndGame endp
+
+ExchangeNames proc near
+	              xor     bx,bx
+	
+	NSendByte:    
+	              mov     dx,3fdh      	;Line Status Register
+	NagainS:      
+	              in      al,dx        	;Read Line Status
+	              test    al,00100000b
+	              jz      NagainS      	;Transmitter Holding Register not empty
+
+	              mov     dx,3f8h      	;Transmit Data Register
+	              mov     al,Name1[bx]
+	              out     dx,al        	;send character
+
+	              mov     dx,3fdh      	;Line Status Register
+	NagainR:      
+	              in      al,dx        	;Read Line Status
+	              test    al,1
+	              jz      NagainR      	;Data not ready
+
+	              mov     dx,3f8h
+	              in      al,dx
+	              mov     Name2[bx],al 	;if received, mov character to ValR
+	              inc     bx
+	              cmp     bx,16
+	              jne     NSendByte
+	
+	              ret
+ExchangeNames endp

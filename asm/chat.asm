@@ -15,13 +15,13 @@ Chat proc near
 	            jz   NoInput             	;if nothing in keyboard buffer, no input
 
 	            cmp  ah,Escape            	;if Esc, exit
-	            jz   Leave
+	            jz   LeaveChat
 
 	            call Input                	;Takes input from user
 	NoInput:    call Output               	;Receives and prints from port
 	            jmp  L
 
-    Leave:
+    LeaveChat:
                mov  ah,0
 	           int  16h                  	;else take key from buffer
 	           ret

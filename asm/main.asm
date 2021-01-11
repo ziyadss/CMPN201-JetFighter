@@ -124,91 +124,54 @@
 
 .code
 
-	              include util.asm
-	              include jets.asm
-	              include bullets.asm
-	              include modes.asm
-	              include powers.asm
-	              include drawp.asm
-	              include chat.asm
+	         include util.asm
+	         include jets.asm
+	         include bullets.asm
+	         include modes.asm
+	         include powers.asm
+	         include drawp.asm
+	         include chat.asm
 
 main proc far
-	              mov     ax,@data
-	              mov     ds,ax
-	              mov     es,ax
+	         mov     ax,@data
+	         mov     ds,ax
+	         mov     es,ax
 	       
-	              call    InitUART
-	              call    NameEntry
-	;call    ExchangeNames
+	         call    InitUART
+	         call    NameEntry
+	         call    Options
+	         call    ExchangeNames
 		   
-	Choice:       
-	              call    Options
+	Choice:  
+	         mov     ah,0
+	         int     16h
 
-	              mov     ah,0
-	              int     16h
+	         cmp     ah,59        	;scancode for F1
+	         je      Chatting
 
-	              cmp     ah,59         	;scancode for F1			TODO
-	              je      Chatting
-
-	              cmp     ah,60         	;scancode for F2
-	              je      Game
+	         cmp     ah,60        	;scancode for F2
+	         je      Game
 	       
-	              cmp     ah,1          	;scancode for Esc
-	              je      Exit
+	         cmp     ah,1         	;scancode for Esc
+	         je      Exit
 
-	              jmp     Choice        	;none of the three options, wait for other input
+	         jmp     Choice       	;none of the three options, wait for other input
 	       
-	Game:         
-	              call    Play
-	              jmp     Choice
+	Game:    
+	         call    Play
+	         jmp     Menu
 
-	Chatting:     
-	              call    Chat
-	              jmp     Choice
+	Chatting:
+	         call    Chat
+	         jmp     Menu
+
+	Menu:    
+	         call    Options
+	         jmp     Choice
 		   
-	Exit:         
-	              mov     ax,4C00h
-	              int     21h           	;terminates the application
+	Exit:    
+	         mov     ax,4C00h
+	         int     21h          	;terminates the application
 		   
 main endp
-
-ExchangeNames proc near
-	
-	              xor     bx,bx
-	              mov     dx,3fdh       	;Line Status Register
-	NagainR:      
-	              in      al,dx         	;Read Line Status
-	              test    al,1
-	              jz      NagainR       	;Data not ready
-
-	              mov     dx,3f8h
-	              in      al,dx
-	              mov     Name2[bx],al  	;if received, mov character to ValR
-	              inc     bx
-	              cmp     al,'$'
-	              jz      NRec
-	              jmp     NagainR
-
-	NRec:         
-	
-	              xor     bx,bx
-	
-	NSendByte:    
-	              mov     dx,3fdh       	;Line Status Register
-	NagainS:      
-	              in      al,dx         	;Read Line Status
-	              test    al,00100000b
-	              jz      NagainS       	;Transmitter Holding Register not empty
-
-	              mov     dx,3f8h       	;Transmit Data Register
-	              mov     al,Name1[bx]
-	              out     dx,al         	;send character
-
-	              inc     bx
-	              cmp     bx,16         	;loops over all array
-	              jnz     NSendByte
-
-	              ret
-ExchangeNames endp
-
 end main
