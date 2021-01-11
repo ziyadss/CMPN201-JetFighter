@@ -10,17 +10,18 @@ MoveJets proc near
 									mov  ah,00h
 									int  16h
 	;-------- JET 1 Freeze-----------
-	cmp Jet2Power,5
-	je Check_Right_Jet_Movement
+									cmp Jet2Power,5
+									je Check_Right_Jet_Movement
+
 	;check if power up is speedup velocity for jet1
 									cmp Jet1Power,2
-									jne Normal1
+									jne Check_Dizzy
 									Mov Dx, Jet1V
 									add Dx, speedUpVelocity
 									mov Jet1V, Dx
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
-								   cmp  Jet2Power, 3
+Check_Dizzy:					   cmp  Jet2Power, 3
 								   jne	Normal1
 					;if keypress "W"=Up   make it Down
 									cmp  ah, 11h  		
@@ -142,13 +143,13 @@ je Exit_Jet_Movement
 
 ;check if power up is speedup velocity for jet2
 									cmp Jet2Power,2
-									jne Normal2
+									jne Check_Dizzy2
 									Mov Dx, Jet2V
 									add Dx, speedUpVelocity
 									mov Jet2V, Dx
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
-								   cmp  Jet1Power, 3
+Check_Dizzy2:					   cmp  Jet1Power, 3
 								   jne	Normal2
 					;if keypress Up   make it Down
 									cmp  ah, 48h  		
