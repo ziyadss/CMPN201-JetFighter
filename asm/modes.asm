@@ -1,6 +1,49 @@
-MainMenu proc near
-	                      mov  ax,12h
+Options proc near
+	                      mov  AX,4F02h
+	                      mov  bx,101h
+	                      int  10h                  	;graph 640x480   256 colors
+
+	; set cursor position to the center of the screen
+	                      mov  ah,2                 	;set cursor position
+	                      mov  bh,0                 	;page 0
+	                      mov  dl,9                 	; x=9  center column position
+	                      mov  dh,9                 	; y=9 center row position
 	                      int  10h
+
+	; display the second screen messages (3 options)
+	                      mov  ah,9
+	                      lea  dx,Option1
+	                      int  21h
+
+	; set cursor position to the next line of the screen
+	                      mov  ah,2                 	;set cursor position
+	                      mov  bh,0                 	;page 0
+	                      mov  dl,9                 	; x=9  center column position
+	                      mov  dh,10                	; y=10 center row position
+	                      int  10h
+
+	                      mov  ah,9
+	                      lea  dx,Option2
+	                      int  21h
+
+	; set cursor position to the next line of the screen
+	                      mov  ah,2                 	;set cursor position
+	                      mov  bh,0                 	;page 0
+	                      mov  dl,9                 	; x=9  center column position
+	                      mov  dh,11                	; y=11 center row position
+
+	                      int  10h
+	                      mov  ah,9
+	                      lea  dx,Option3
+	                      int  21h
+
+	                      ret
+Options endp
+
+NameEntry proc near
+	                      mov  AX,4F02h
+	                      mov  bx,101h
+	                      int  10h                  	;graph 640x480   256 colors
 
 	; set cursor position to the center of the screen
 	                      mov  ah,2                 	;set cursor position
@@ -35,11 +78,11 @@ MainMenu proc near
 	                      cmp  al,13
 	                      jz   name_done
 	                      cmp  al,8                 	;If Backspace pressed,  erase
-	                      jz   Erase
+	                      jz   BS
 	                      jmp  names_array
 	                      jz   name_done
               
-	Erase:                
+	BS:                
 
 
 	                      dec  SI
@@ -109,45 +152,9 @@ MainMenu proc near
 	;get key pressed (wait for the key)
 	                      mov  ah,0
 	                      int  16h
-	                      mov  ax,12h
-	                      int  10h
-
-	; set cursor position to the center of the screen
-	                      mov  ah,2                 	;set cursor position
-	                      mov  bh,0                 	;page 0
-	                      mov  dl,9                 	; x=9  center column position
-	                      mov  dh,9                 	; y=9 center row position
-	                      int  10h
-
-	; display the second screen messages (3 options)
-	                      mov  ah,9
-	                      lea  dx,Option1
-	                      int  21h
-
-	; set cursor position to the next line of the screen
-	                      mov  ah,2                 	;set cursor position
-	                      mov  bh,0                 	;page 0
-	                      mov  dl,9                 	; x=9  center column position
-	                      mov  dh,10                	; y=10 center row position
-	                      int  10h
-
-	                      mov  ah,9
-	                      lea  dx,Option2
-	                      int  21h
-
-	; set cursor position to the next line of the screen
-	                      mov  ah,2                 	;set cursor position
-	                      mov  bh,0                 	;page 0
-	                      mov  dl,9                 	; x=9  center column position
-	                      mov  dh,11                	; y=11 center row position
-
-	                      int  10h
-	                      mov  ah,9
-	                      lea  dx,Option3
-	                      int  21h
-
 	                      ret
-MainMenu endp
+NameEntry endp
+
 
 Play proc near
 	                      Call FirstPowerSpawnTime

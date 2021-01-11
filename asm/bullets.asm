@@ -133,12 +133,18 @@ AdvanceBullets proc near
    
 	                      cmp   bulletsZ[bx],0            	;if no bullet, check next one
 	                      jz    nohit
-	                      mov   ax,bulletsZ[bx]
-	                      test  ax,1
+	                      mov   ax,bulletsZ[bx]				;gets the direction of the bullet and puts it in ax(1,-1,2,-2) 
+	                      ;///////////////////////////////////////	  
+						  cmp   Jet1Power[si],6				;added power up
+						  jnz   NoFasterBullets
+						  add   ax,AddedBulletSpeed
+						  NoFasterBullets:
+					      ;////////////////////////////////////////	  
+						  test  ax,1
 	                      jnz   vert                      	;if direction is -1 or 1 bullet is vertical
 
-	hori:                                                 	;else it is horizontal
-	                      sal   ax,1
+	hori:                                                 	;else it is horizontal(2 or-2)
+	                      sal   ax,1						; multiply it by 2
 	                      add   bulletsX[bx],ax           	;add +4/-4 to its X depending on direction
 	                      cmp   bulletsX[bx],0
 	                      jle   removeBullet              	;if hit boundary, remove it
@@ -147,15 +153,14 @@ AdvanceBullets proc near
 	                      jmp   cont
 
 	vert:                 
-	                      mov   cl,2
-	                      sal   ax,cl
+	                      sal 	ax,1						;(1 or -1)
+	                      sal   ax,1						;multiply it by 4
 	                      add   bulletsY[bx],ax           	;add +4/-4 to its Y depending on direction
 	                      cmp   bulletsY[bx],0
 	                      jle   removeBullet              	;if hit boundary, remove it
 	                      cmp   bulletsY[bx],Window_Height
 	                      jge   removeBullet              	;if hit boundary, remove it
 	                      jmp   cont
-
 
 	cont:                 
 	                      push  bx

@@ -9,11 +9,41 @@
 .stack 64
 .data
 
+	ValR              db      ?
+	
+	Backspace         equ     0Eh                                     	;Backspace scancode, to delete last character
+	Escape            equ     1                                       	;Escape key to exit program
+	Whitespace        equ     32                                      	;Whitespace ascii, to overwrite deleted character
+	Return            equ     1ch                                     	;Enter key scancode
+
+	ScreenWidth       equ     80                                      	;In characters
+	ScreenHeight      equ     30
+
+	MaxX              equ     75                                      	;Right boundary
+	MaxY              equ     40                                      	;Lower boundary -- still unused
+
+	MinX              equ     2                                       	;Left boundary
+	MinY              equ     1                                       	;Upper boundary
+
+	MsgMinX           equ     5                                       	;Boundary for messages
+
+	CursorSX          db      MinX                                    	;Cursor for upper half of window
+	CursorSY          db      MinY
+
+	CursorRX          db      MinX                                    	;Cursor for bottom half of window
+	CursorRY          db      MinY + ScreenHeight/2
+	
+	MsgLength         dw      0                                       	;Length of message typed
+
+	Msg               db      MaxX-MsgMinX dup(?)                     	;Array holding the message (note: message is limited to one line of 70 characters)
+
 	                  include pics.asm
 
-	POWER_UP          DW      2                                       	;intially there is no power up
+	POWER_UP          DW      ?                                       	;intially there is no power up
 	XPOSITION         DW      ?
 	YPOSITION         DW      ?
+
+	AddedBulletSpeed  equ     4                                       	;must be even
 	
 	NextPowerCallTime db      ?                                       	;value from 0~59 ie:time in sec
 	InitialPowerDelay equ     5                                       	;the time before the first powerup spawn
@@ -21,14 +51,13 @@
 	;----------- variables for the first screen-----------------
 	; 2 variables for each player to enter their names in
 	; the max allowed # of char is 15
-	MinX              equ     9
-	CursorX           db      MinX
+	CursorX           db      9
       
 	msg1              db      'Please enter your name:','$'
 	msg2              db      'Press any key to continue:','$'
 	
-	Name1             db      16 DUP(?),'$'
-	Name2             db      16 DUP(?),'$'
+	Name1             db      17 DUP('$')
+	Name2             db      17 DUP('$')
 	
 	;------------variables for the second screen----------------
 	; the menus the player will choose from
@@ -63,8 +92,8 @@
 	Jet2Reload        dw      0
 
 	;PowerUP (1->Shield , 2->Speed up jet , 3->Dizzy , 4-> Double bullets , 5->Freeze , 6->Faster bullets )
-	Jet1Power         dw      2                                       	;PowerUP Variable for Jet1
-	Jet2Power         dw      1                                       	;PowerUP Variable for Jet2
+	Jet1Power         dw      ?                                       	;PowerUP Variable for Jet1
+	Jet2Power         dw      ?                                       	;PowerUP Variable for Jet2
 
 	Jet1Timer         dw      0
 	Jet2Timer         dw      10
@@ -81,9 +110,9 @@
 	
 	JetW              equ     25                                      	;Jet Width
 	JetH              equ     25                                      	;Jet Height
-	Jet1V              DW     4                                       	;Jet1 Velocity
-	Jet2V				DW		4										; Jet2 Velocity
-	speedUpVelocity		equ		4										;speedup velocity
+	Jet1V             DW      4                                       	;Jet1 Velocity
+	Jet2V             DW      4                                       	; Jet2 Velocity
+	speedUpVelocity   equ     4                                       	;speedup velocity
 	maxBullets        equ     16                                      	;Maximum number of bullets
 	
 	bulletsX          dw      maxBullets dup (?)                      	;Array of X locations of the bullets
@@ -94,40 +123,49 @@
 
 .code
 
-	       include util.asm
-	       include jets.asm
-	       include bullets.asm
-	       include modes.asm
-	       include powers.asm
-	       include drawp.asm
+	         include util.asm
+	         include jets.asm
+	         include bullets.asm
+	         include modes.asm
+	         include powers.asm
+	         include drawp.asm
+	         include chat.asm
 
 main proc far
-	       mov     ax,@data
-	       mov     ds,ax
-	       mov     es,ax
+	         mov     ax,@data
+	         mov     ds,ax
+	         mov     es,ax
 	       
-	       call    MainMenu
+	         call    NameEntry
 		   
-	Choice:
-	       mov     ah,0
-	       int     16h
+	Choice:  
+	         call    Options
 
-	       cmp     ah,59      	;scancode for F1			TODO
-	       
-	       cmp     ah,60      	;scancode for F2
-	       je      Game
-	       
-	       cmp     ah,1       	;scancode for Esc
-	       je      Exit
+	         mov     ah,0
+	         int     16h
 
-	       jmp     Choice     	;none of the three options, wait for other input
+	         cmp     ah,59      	;scancode for F1			TODO
+	         jmp     Chatting
+
+	         cmp     ah,60      	;scancode for F2
+	         je      Game
 	       
-	Game:  
-	       call    Play
+	         cmp     ah,1       	;scancode for Esc
+	         je      Exit
+
+	         jmp     Choice     	;none of the three options, wait for other input
+	       
+	Game:    
+	         call    Play
+	         jmp     Choice
+
+	Chatting:
+	         call    Chat
+	         jmp     Choice
 		   
-	Exit:  
-	       mov     ax,4C00h
-	       int     21h        	;terminates the application
+	Exit:    
+	         mov     ax,4C00h
+	         int     21h        	;terminates the application
 		   
 main endp
 end main
