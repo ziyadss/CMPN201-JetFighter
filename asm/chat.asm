@@ -1,13 +1,9 @@
 Chat proc near
     
-	            mov  ax,@data
-	            mov  ds,ax                	;data segment initialization
 	            mov  cx,1                 	;to print each character only once when using int 10h / ah=0ah
     
-	            mov  ax,12h
-	            int  10h                  	;initialize screen
-
-	            call InitUART             	;communication initialization
+	            mov ax,12h
+				int  10h
 
 	            call ScreenPrepS          	;print Player1 name, set cursorS
 	            Call ScreenPrepR          	;print Player2 name, set cursorR
@@ -106,7 +102,6 @@ Input proc near
 	KeyTaken:   ret
 	
 Input endp
-
 
 SendMessage proc near
 
