@@ -146,16 +146,16 @@ main proc far
 	              mov     ah,0
 	              int     16h
 
-	              cmp     ah,59       	;scancode for F1			TODO
+	              cmp     ah,59         	;scancode for F1			TODO
 	              je      Chatting
 
-	              cmp     ah,60       	;scancode for F2
+	              cmp     ah,60         	;scancode for F2
 	              je      Game
 	       
-	              cmp     ah,1        	;scancode for Esc
+	              cmp     ah,1          	;scancode for Esc
 	              je      Exit
 
-	              jmp     Choice      	;none of the three options, wait for other input
+	              jmp     Choice        	;none of the three options, wait for other input
 	       
 	Game:         
 	              call    Play
@@ -167,23 +167,22 @@ main proc far
 		   
 	Exit:         
 	              mov     ax,4C00h
-	              int     21h         	;terminates the application
+	              int     21h           	;terminates the application
 		   
 main endp
 
 ExchangeNames proc near
-
 	
 	              xor     bx,bx
-	              mov     dx,3fdh     	;Line Status Register
+	              mov     dx,3fdh       	;Line Status Register
 	NagainR:      
-	              in      al,dx       	;Read Line Status
+	              in      al,dx         	;Read Line Status
 	              test    al,1
-	              jz      NagainR     	;Data not ready
+	              jz      NagainR       	;Data not ready
 
 	              mov     dx,3f8h
 	              in      al,dx
-	              mov     Name2[bx],al	;if received, mov character to ValR
+	              mov     Name2[bx],al  	;if received, mov character to ValR
 	              inc     bx
 	              cmp     al,'$'
 	              jz      NRec
@@ -194,18 +193,18 @@ ExchangeNames proc near
 	              xor     bx,bx
 	
 	NSendByte:    
-	              mov     dx,3fdh     	;Line Status Register
+	              mov     dx,3fdh       	;Line Status Register
 	NagainS:      
-	              in      al,dx       	;Read Line Status
+	              in      al,dx         	;Read Line Status
 	              test    al,00100000b
-	              jz      NagainS     	;Transmitter Holding Register not empty
+	              jz      NagainS       	;Transmitter Holding Register not empty
 
-	              mov     dx,3f8h     	;Transmit Data Register
+	              mov     dx,3f8h       	;Transmit Data Register
 	              mov     al,Name1[bx]
-	              out     dx,al       	;send character
+	              out     dx,al         	;send character
 
 	              inc     bx
-	              cmp     bx,16       	;loops over all array
+	              cmp     bx,16         	;loops over all array
 	              jnz     NSendByte
 
 	              ret

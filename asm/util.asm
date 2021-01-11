@@ -50,20 +50,54 @@ DrawLives endp
     
 EndGame proc near
 
-	             mov ax,12h
-	             int 10h
+	              mov     Health1,15
+	              mov     Health2,15
+	              mov     LastTime,0
+	              mov     Jet1X,10h
+	              mov     Jet2X,0220h
+	              mov     Jet1Y,30h
+	              mov     Jet2Y,30h
+	              mov     Jet1Z,2
+	              mov     Jet2Z,-2
+	              mov     Jet1Reload,0
+	              mov     Jet2Reload,0
+					   
+	              mov     Jet1Power,0
+	              mov     Jet2Power,0
+	              mov     Jet1Timer,0
+	              mov     Jet2Timer,0
+	              mov     Won,0
+					   
+	              mov     POWER_UP,0
+	
+	              mov     bx,7
+	HealthLoop:   
+	              mov     Score1[bx],219
+	              mov     Score2[bx],219
+	              inc     bx
+	              cmp     bx,15
+	              jnz     HealthLoop
+	              xor     bx,bx
+	ResetLoop:    
+	              mov     bulletsZ[bx],0
+	              inc     bx
+	              cmp     bx,maxBullets
+	              jnz     ResetLoop
+				 
+	              mov     ax,12h
+	              int     10h
         
-	             mov ah,2
-	             mov dx,0C10h      	;Move cursor to location
-	             int 10h
+	              mov     ah,2
+	              mov     dx,0C10h      	;Move cursor to location
+	              int     10h
 
-	             mov ah, 9
-	             lea dx,WinMessage 	;Check Won variable, get message
-	             int 21h
+	              mov     ah, 9
+	              lea     dx,WinMessage 	;Check Won variable, get message
+	              int     21h
 
-	             mov ah,0
-	             int 16h
+	              mov     ah,0
+	              int     16h
 	;then?
-	             ret
+	              ret
 
 EndGame endp
