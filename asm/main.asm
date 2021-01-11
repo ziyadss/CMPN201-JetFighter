@@ -6,6 +6,7 @@
 ;		Sarah Osama Osman
 ;		Zeyad Sameh Sobhy
 .model huge
+.386
 .stack 64
 .data
 

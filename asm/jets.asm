@@ -5,16 +5,19 @@ MoveJets proc near
 	                               int  16h
 	                               jz   LR1                           	;if ZF=1 JZ->Jump if Zero to next Jet // if ZF=0 a key is pressed (check which key)
 
+
 	;check which key is pressed-After Excution (ah=scancode) ; remove from buffer
 									mov  ah,00h
 									int  16h
+	;-------- JET 1 Freeze-----------
+	cmp Jet2Power,5
+	je Check_Right_Jet_Movement
 	;check if power up is speedup velocity for jet1
 									cmp Jet1Power,2
 									jne Normal1
 									Mov Dx, Jet1V
 									add Dx, speedUpVelocity
 									mov Jet1V, Dx
-	
 
 	;Check if the Powerup dizzy is On Y->flip moves N-> use Normal Moves
 								   cmp  Jet2Power, 3
@@ -128,10 +131,14 @@ MoveJets proc near
 
 	            					MOV Jet1V, 4
 									Mov Jet2V, 4
-	                               ret
+	                                ret
 MoveJets endp
 
 Check_Right_Jet_Movement_Proc proc near
+
+;-------- JET 2	 Freeze-----------
+cmp Jet1Power,5
+je Exit_Jet_Movement
 
 ;check if power up is speedup velocity for jet2
 									cmp Jet2Power,2
