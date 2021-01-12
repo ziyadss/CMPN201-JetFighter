@@ -32,7 +32,7 @@
 	CursorSY          db      MinY
 
 	CursorRX          db      MinX                              	;Cursor for bottom half of window
-	CursorRY          db      MinY + ScreenHeight/2
+	CursorRY          db      MinY + (ScreenHeight/2 -1)
 	
 	MsgLength         dw      0                                 	;Length of message typed
 
@@ -59,6 +59,9 @@
 	
 	Name1             db      16 DUP('$')
 	Name2             db      16 DUP('$')
+
+	;------------variables for the Chat screen----------------
+	StatusBarChatMsg db 	'You are currently chating with','$'
 	
 	;------------variables for the second screen----------------
 	; the menus the player will choose from
@@ -108,7 +111,10 @@
 	Window_Height     equ     1E0h                              	;the height of the window (480 pixels)
 	Window_Bounds     equ     6                                 	;variable used to check collisions early
 	Window_Score      equ     50
-	
+	StatusBarX	  	  equ	  10									;Height of the status Bar
+	StatusBarHeight	  equ	  29									;Height of the status Bar
+
+
 	JetW              equ     25                                	;Jet Width
 	JetH              equ     25                                	;Jet Height
 	Jet1V             DW      4                                 	;Jet1 Velocity

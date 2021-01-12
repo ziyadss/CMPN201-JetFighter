@@ -4,9 +4,11 @@ Chat proc near
     
 	            mov ax,12h
 				int  10h
-
+				
+				
+				call ScreenStatusBar
 	            call ScreenPrepS          	;print Player1 name, set cursorS
-	            Call ScreenPrepR          	;print Player2 name, set cursorR
+	            Call ScreenPrepR          	;print Player2 name, set 
 
 	L:          
 
@@ -232,5 +234,33 @@ ScreenPrepR proc near
 				
 	            add  CursorRX,MsgMinX-MinX
 	            inc  CursorRY             	;changes cursor to first message location
-	            ret
+				
+				mov  ah,02h
+	            mov  dl,StatusBarX
+	            mov  dh,StatusBarHeight
+	            int  10h                  	;moves cursor
+
+				mov  ah,9
+	            lea  dx,StatusBarChatMsg
+	            int  21h                  	;prints P2 Name
+
+				mov  ah,02h
+	            mov  dl,50
+	            mov  dh,StatusBarHeight
+	            int  10h                  	;moves cursor
+
+				mov  ah,9
+	            lea  dx, Name2
+	            int  21h                  	;prints P2 Name
+			
+	EXITHALABO2A:     ret
 ScreenPrepR endp
+
+
+
+ScreenStatusBar proc near
+
+				
+		ret
+
+ScreenStatusBar endp
