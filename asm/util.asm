@@ -15,7 +15,25 @@ DisplayNames proc near
 	             mov ah, 9
 	             lea dx, Name2     	;Print player2 Name
 	             int 21h
+;------------------- Status Bar----------------------------------------
+				 mov ah,2
+	             mov  dl,StatusBarX
+	             mov  dh,StatusBarHeight   	;Move cursor to the secound second location
+	             int 10h
 
+	             mov ah, 9
+	             lea dx, StatusBarPlayMsg     	;Print player2 Name
+	             int 21h
+				
+				mov  ah,02h
+	            mov  dl,45
+	            mov  dh,StatusBarHeight
+	            int  10h                  	;moves cursor
+
+				mov  ah,9
+	            lea  dx, Name2
+	            int  21h                  	;prints Other player's name Name
+			
 	             ret
         
 DisplayNames endp

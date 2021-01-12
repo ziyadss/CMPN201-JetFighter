@@ -159,12 +159,7 @@ NameEntry endp
 Play proc near
 	                      Call FirstPowerSpawnTime
 	CheckTime:            
-	                      mov ah,1
-						  int 16h
-						  cmp ah,62
-						  je ForceExitGame
-						  
-						  call FireBullets
+	                      call FireBullets
 	                      call MoveJets
                                    
 	                      mov  ah,2ch               	;get system time
@@ -190,16 +185,7 @@ Play proc near
 
 	                      cmp  Won,0
 	                      jz   CheckTime            	;If no winner yet, continue game loop
-						  jmp ExitGame
 
-
-	                      ForceExitGame:
-						  mov ah,0
-						  int 16h
-						  
-						  ExitGame:
-						  call EndGame              	;Else, end the game
+	                      call EndGame              	;Else, end the game
 	                      ret
-						  
-						  ret
 Play endp

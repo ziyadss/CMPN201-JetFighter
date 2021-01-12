@@ -60,8 +60,9 @@
 	Name1             db      16 DUP('$')
 	Name2             db      16 DUP('$')
 
-	;------------variables for the Chat screen----------------
-	StatusBarChatMsg db 	'You are currently chating with','$'
+	;------------variables for the Status Bar Msg----------------
+	StatusBarChatMsg db 	'You are currently chating with','$' 		;Chat msg
+	StatusBarPlayMsg db 	'You are currently playing with','$' 		;Chat msg
 	
 	;------------variables for the second screen----------------
 	; the menus the player will choose from
