@@ -10,6 +10,7 @@
 .stack 64
 .data
 
+	GoToMenu db 0
 	ValR              db      ?
 	
 	Backspace         equ     0Eh                               	;Backspace scancode, to delete last character

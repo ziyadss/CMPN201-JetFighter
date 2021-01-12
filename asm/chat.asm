@@ -10,21 +10,29 @@ Chat proc near
 	            Call ScreenPrepR          	;print Player2 name, set 
 
 	L:          
-
-                mov  ah,1
+				cmp GoToMenu,1
+				je LeaveChat
+                
+				mov  ah,1
 	            int  16h
 	            jz   NoInput             	;if nothing in keyboard buffer, no input
 
-	            cmp  ah,Escape            	;if Esc, exit
-	            jz   LeaveChat
+	            cmp  ah,61            	;if F3, exit
+	            jz   RequestLeave
 
 	            call Input                	;Takes input from user
 	NoInput:    call Output               	;Receives and prints from port
 	            jmp  L
 
+RequestLeave: 
+xor ah,ah
+int 16h
+mov Msg,61
+mov	MsgLength,1
+call SendMessage
+
     LeaveChat:
-               mov  ah,0
-	           int  16h                  	;else take key from buffer
+	mov GoToMenu,0
 	           ret
  
 Chat endp
@@ -43,6 +51,9 @@ Output proc near
 	            cmp  ValR,10d
 	            je   EOM                  	;if it is EOM, jump
 
+				cmp ValR,61					;F3 sent
+				je  NeedToExit
+
 	            mov  ah,0ah
 	            mov  al,ValR
 	            mov  bx,0fh
@@ -51,11 +62,31 @@ Output proc near
 	            inc  CursorRX
 	            jmp  NoOut                	;increment X coordinate and exit function
 
-	EOM:        inc  CursorRY
-	            mov  CursorRX,MsgMinX
+	EOM:        mov  CursorRX,MsgMinX
+
+	cmp CursorRY, StatusBarHeight-1
+				jne ToNextLineR
+				
+				mov ah,6
+				mov al,1
+				mov bh,0f0h
+				mov cl,MsgMinX
+				mov ch,MinY + ScreenHeight/2
+				mov dl,maxX
+				mov dh,CursorRY
+				int 10h
+				mov cx,1
+				xor bh,bh
+				jmp  NoOut
+				
+	ToNextLineR:	inc  CursorRY             	;go to next line
 
 	NoOut:      
 	            ret
+
+				NeedToExit:
+				mov GoToMenu,1
+				ret
 Output endp
 
 Receive proc near
@@ -82,7 +113,7 @@ Input proc near
 	            mov  dh,CursorSY
 	            int  10h                  	;moves cursor to correct location
                        
-	ReadKey:    mov  ah,0
+	ReadKey:    xor ah,ah
 	            int  16h                  	;take key from buffer
 	           
 	            cmp  ah,Return            	;if Enter, send message
@@ -97,9 +128,22 @@ Input proc near
 	            call SendMessage
 	            
 	            mov  CursorSX,MsgMinX
-	            inc  CursorSY             	;go to next line
-
-	            jmp  KeyTaken
+	            cmp CursorSY, MinY + ScreenHeight/2-2
+				jne ToNextLine
+				
+				mov ah,6
+				mov al,1
+				mov bh,0f0h
+				mov cl,MsgMinX
+				mov ch,MinY+1
+				mov dl,maxX
+				mov dh,CursorSY
+				int 10h
+				mov cx,1
+				xor bh,bh
+				jmp  KeyTaken
+				
+	ToNextLine:	inc  CursorSY             	;go to next line
 	KeyTaken:   ret
 	
 Input endp
@@ -143,7 +187,7 @@ InitUART proc near
 
 	;Set MSB of Baud Rate Divisor Latch register
 	            mov  dx,3f9h
-	            mov  al,00h
+	            xor al,al
 	            out  dx,al
 
 	;Set port configuration
@@ -199,6 +243,9 @@ ProcessKey proc near
 ProcessKey endp
 
 ScreenPrepS proc near
+mov CursorSX,MinX                              
+mov CursorSY,MinY
+
 	            mov  ah,2h
 	            mov  dl,CursorSX
 	            mov  dh,CursorSY
@@ -218,6 +265,9 @@ ScreenPrepS proc near
 ScreenPrepS endp
 
 ScreenPrepR proc near
+mov CursorRX,MinX
+mov	CursorRY,MinY + (ScreenHeight/2 -1)
+	
 	            mov  ah,02h
 	            mov  dl,CursorRX
 	            mov  dh,CursorRY
