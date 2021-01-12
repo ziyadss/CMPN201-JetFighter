@@ -82,6 +82,7 @@ Check_Dizzy:					   cmp  Jet2Power, 3
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
 	                               sub  ax,Window_Bounds
+								   sub  ax,Window_Status_Bar
 	                               sub  ax,JetH
 	                               cmp  Jet1Y,ax
 	                               jg   Fix_Jet_Left_Bottom_Position
@@ -214,6 +215,7 @@ Check_Dizzy2:					   cmp  Jet1Power, 3
 
 	                               mov  ax,Window_Height              	;To make sure that the when the left jet moves Down it doesn't move past the window
 	                               sub  ax,Window_Bounds
+								   sub  ax,Window_Status_Bar
 	                               sub  ax,JetH
 	                               cmp  Jet2Y,ax
 	                               jg   Fix_Jeft_Right_Bottom_Position

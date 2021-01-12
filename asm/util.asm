@@ -18,7 +18,7 @@ DisplayNames proc near
 ;------------------- Status Bar----------------------------------------
 				 mov ah,2
 	             mov  dl,StatusBarX
-	             mov  dh,StatusBarHeight   	;Move cursor to the secound second location
+	             mov  dh,StatusBarHeight2   	;Move cursor to the secound second location
 	             int 10h
 
 	             mov ah, 9
@@ -26,12 +26,21 @@ DisplayNames proc near
 	             int 21h
 				
 				mov  ah,02h
-	            mov  dl,45
-	            mov  dh,StatusBarHeight
+	            mov  dl,41
+	            mov  dh,StatusBarHeight2
 	            int  10h                  	;moves cursor
 
 				mov  ah,9
 	            lea  dx, Name2
+	            int  21h                  	;prints Other player's name Name
+
+				mov  ah,02h
+	            mov  dl,StatusBarX
+	            mov  dh,StatusBarHeight
+	            int  10h                  	;moves cursor
+
+				mov  ah,9
+	            lea  dx, StatusBarPlayMsg2
 	            int  21h                  	;prints Other player's name Name
 			
 	             ret

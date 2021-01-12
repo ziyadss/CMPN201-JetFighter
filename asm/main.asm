@@ -61,9 +61,12 @@
 	Name2             db      16 DUP('$')
 
 	;------------variables for the Status Bar Msg----------------
-	StatusBarChatMsg db 	'You are currently chating with','$' 		;Chat msg
-	StatusBarPlayMsg db 	'You are currently playing with','$' 		;Chat msg
-	
+	StatusBarChatMsg 	db 	'You are currently chating with','$' 		;Chat msg
+	StatusBarPlayMsg 	db 	'You are currently playing with','$' 		;Chat msg
+	StatusBarPlayMsg2 	db 	'To end the game press F4','$' 				;Chat msg
+	StatusBarMainMenuMsg 	db 	'You Sent a chat invitaion to','$' 				;Chat msg
+	StatusBarMainMenuMsg2 	db 	'To end the game press F4','$' 				;Chat msg
+
 	;------------variables for the second screen----------------
 	; the menus the player will choose from
 	Option1           db      'To start chatting press F1','$'
@@ -112,8 +115,12 @@
 	Window_Height     equ     1E0h                              	;the height of the window (480 pixels)
 	Window_Bounds     equ     6                                 	;variable used to check collisions early
 	Window_Score      equ     50
-	StatusBarX	  	  equ	  10									;Height of the status Bar
-	StatusBarHeight	  equ	  29									;Height of the status Bar
+	Window_Status_Bar   equ   35
+
+
+	StatusBarX	  	  equ	  10									;Height of the status Bar 
+	StatusBarHeight	  equ	  29									;Height of the status Bar Chat
+	StatusBarHeight2  equ	  28									;Height of the status Bar
 
 
 	JetW              equ     25                                	;Jet Width

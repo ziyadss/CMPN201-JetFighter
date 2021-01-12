@@ -252,6 +252,7 @@ ScreenPrepR proc near
 				mov  ah,9
 	            lea  dx, Name2
 	            int  21h                  	;prints Other player's name Name
+
 			
 	EXITHALABO2A:     ret
 ScreenPrepR endp
