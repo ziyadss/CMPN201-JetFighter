@@ -1,6 +1,6 @@
 # CMPN201-JetFighter
 
-Microprocessor Systems Project - first year CUFE students.
+Microprocessor Systems Project - second year CUFE students.
 
 A reimagining of the 2 player 1975 Atari game using Assembly.  
 A chat mini-app is available.  
