@@ -107,8 +107,8 @@
 	Jet1Timer         dw      0
 	Jet2Timer         dw      0
 
-	Colour1           equ     0fh
-	Colour2           equ     0fh
+	Colour1           equ     04h
+	Colour2           equ     01h
 	ReloadTime        equ     5
 	PowerupTime       equ     5
 
@@ -129,7 +129,7 @@
 	Jet1V             DW      4                                 	;Jet1 Velocity
 	Jet2V             DW      4                                 	; Jet2 Velocity
 	speedUpVelocity   equ     4                                 	;speedup velocity
-	maxBullets        equ     16                                	;Maximum number of bullets
+	maxBullets        equ     32                                	;Maximum number of bullets
 	
 	bulletsX          dw      maxBullets dup (?)                	;Array of X locations of the bullets
 	bulletsY          dw      maxBullets dup (?)                	;Array of Y locations of the bullets

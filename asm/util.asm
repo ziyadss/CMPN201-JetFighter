@@ -117,8 +117,25 @@ EndGame proc near
 	              int     10h
         
 	              mov     ah,2
-	              mov     dx,0C10h      	;Move cursor to location
+	              mov     dx,0C20h      	;Move cursor to location
 	              int     10h
+
+				  cmp Won,2    ; If win=1 -> player 1 won , win=2 -> player 2 won
+				  Je Player2win
+
+				  mov ah,9
+				  lea dx,Name2
+				  int 21h
+
+				  jmp Print_Win_msg
+
+				  Player2win:
+
+				  mov ah,9
+				  lea dx,Name1
+				  int 21h
+
+				  Print_Win_msg:
 
 	              mov     ah, 9
 	              lea     dx,WinMessage 	;Check Won variable, get message
